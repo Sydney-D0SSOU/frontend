@@ -1,10 +1,10 @@
 <template>
-    <div v-if="authorized" id="page">
+    <div  id="page">
         <Nav/>
         <h1>Bienvenue Banque {{ memberInfo.designation }}</h1>
         <button id="see-InfoUsers" @click="seeInfoUsers">Voir les infos des utilisateurs</button>
     </div>
-    <NoAccess v-else></NoAccess>
+   
 </template>
 
 <script>

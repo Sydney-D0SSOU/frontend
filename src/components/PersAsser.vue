@@ -4,7 +4,6 @@
         <h1>Welcom {{memberInfo.name}}</h1>
         <button id="rUser" @click="registerUser">Inscrire un utilisateur </button>
         <button id="cnxUser" @click="connexionUser">Connexion utilisateur </button>
-        <button id="rBank" @click="registerBank">Inscrire une banque </button>
     </div>
 </template>
 

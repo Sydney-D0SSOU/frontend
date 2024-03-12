@@ -1,273 +1,251 @@
 <template>
   <div id="page" class="background-image">
-          <form class= "form" @submit.prevent="submitForm()">
-            <img id= "img" src="../assets/addcmp.png" alt="Image de formulaire" class="form-image">
-            <p id="ajout_compte">Ajouter compte </p>
-            <p id="Nature-compte">[Utilisateur]</p>
-            <input id= "Nom" type="text" v-model="formData.name" placeholder="Nom:" @input="clearError" required>
-            <input id= "num_ip"  type="txt" v-model="formData.numero_ip" placeholder="Numero IP:" @input="clearError" required>
-            <h6 class="msgerr" v-if="badIP">Verifiez le numero IP !</h6>
-            <input id=  "adresse"  type="txt" v-model="formData.adresse" placeholder="Adresse:" @input="clearError" required>
-            <input id= "phone_num" type="txt" v-model="formData.telephone" placeholder="Numero de telephone:" @input="clearError" required>
-            <button id= "gen_btm" @click.prevent="generateUserCode(5)">Generer</button>
-            <input id= "id_code_user" type="text" v-model="formData.code_id" placeholder="Code utilisateur:" @input="clearError" required>
-            <h6 class="msgerr" v-if="badcode">5 caractere requis pour le code !</h6>
-            <div id="condition">
-              <p id="txt-cond">J'accepte les conditions d'utilisations</p>
-              <input type="checkbox" id="checkbox-cond" required>
-              <p id="know-more" class="txt-click">En savoir plus</p>
-            </div>
-            <h6 class="msgerr" v-if="badinfo">Cet utilisateur existe déjà !</h6>
-            <h6 id="ok-msg" v-if="success">Inscription reussie !</h6>
-            <button  id= "log" :disabled="!isFormValid" >Inscrire</button>
-          </form>
-       </div>
-   <!-- <NoAccess v-else></NoAccess>-->
+    <form class="form" @submit.prevent="submitForm">
+      <img src="../assets/addcmp.png" alt="Image de formulaire" class="form-image">
+      <p id="ajout_compte">Ajouter compte </p>
+      <p id="Nature-compte">[Un Civil]</p>
+      <input id="Designation" type="text" v-model="formData.nom" placeholder="Nom du civil:" @input="clearError" required>
+      <input id="IFU" type="text" v-model="formData.ifu" placeholder="IFU:" @input="clearError" required>
+      <input id="paswrd" type="text" v-model="formData.tel" placeholder="Téléphone:" @input="clearError" required>
+      <input id="adresse" type="text" v-model="formData.prenoms" placeholder="Prenom du civil:" @input="clearError" required>
+      <input id="Contact" type="text" v-model="formData.nip" placeholder="Numéro d'identification personnel:" @input="clearError" required>
+      <br>
+      <div id="dirigeant">
+        <input id="dir_name" type="text" v-model="formData.profession" placeholder="Profession:" @input="clearError" required>
+        <input id="dir_Contact" type="text" v-model="formData.email" placeholder="Adresse email:" @input="clearError" required>
+      </div>
+      <button id="gen_btm" type="button" @click="generateUserCode(8)">Generer</button>
+      <input id="user_code_id" type="text" v-model="formData.password" placeholder="mot de passe:" @input="clearError" required>
+      <h6 class="msgerr" v-if="ifuError">{{ ifuError }}</h6>
+      <h6 class="msgerr" v-if="nipError">{{ nipError }}</h6>
+      <h6 class="msgerr" v-if="badcode">8 caractere requis pour le code !</h6>
+      <h6 class="msgerr" v-if="badinfo">Informations invalides !</h6>
+      <h6 id="ok-msg" v-if="success">Inscription réussie !</h6>
+      <button id="log" type="submit">Inscrire</button>
+    </form>
+  </div>
 </template>
 
 <script>
-//import NoAccess from './AccessDenied.vue';
-//import Nav from './BarreNav.vue';
-//import {authPersAsser} from '../auth.js';
-  import axios from 'axios';
-  export default {
-    name: 'RegisterVue',
-   // mixins: [authPersAsser],  
-    components: {
-     // Nav, //NoAccess
-    },
-    data() {
-      return {
-        formData: {
-          name: '', status: 'User', numero_ip: '', adresse: '',
-          code_id: '', telephone: ''
-        },
-        badinfo: false, success: false, badcode: false, badIP: false
-      };
-    },
-    methods: {
-      generateUserCode(length) {
+import axios from 'axios';
+
+export default {
+  name: 'RegisterVue',
+  data() {
+    return {
+      formData: {
+        nom: '', 
+        prenoms: '',
+        ifu: '',
+        nip: '', 
+        profession: '',
+        email: '', 
+        password: '', 
+        tel: ''
+      },
+      nipError:'',
+      ifuError:'',
+      badinfo: false, 
+      success: false, 
+      badcode: false, 
+    };
+  },
+  methods: {
+    generateUserCode(length) {
       const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let code = '';
       for (let i = 0; i < length; i++) {
         const randomIndex = Math.floor(Math.random() * charset.length);
         code += charset[randomIndex];
       }
-      this.formData.code_id = code;
+      this.formData.password = code;
     },
-      isFormValid() {
-          for (const key in this.formData) {
-              if (this.formData[key] === '') {
-                return false;
-              }
-          }
-          return true;
-      },
-      async submitForm() {
-        if (this.formData.numero_ip.length != 10 || !/^\d+$/.test(this.formData.numero_ip)) {
-          this.badIP = true; return
-        }
-        if (this.formData.code_id.length !== 5) {
-          this.badcode = true; return
-        }
-        console.log(`Someone submit`);
-        try {
-            axios.post('http://localhost:3100/register', this.formData, {
-              headers: {
-                'Content-Type': 'application/json'
-              },
-            })
-            .then(() => {
-              this.success = true;
-              console.log('Inscription réussie !');
-              setTimeout(() => {
-                this.success = false; // Réinitialisation après 2 secondes
-              }, 4000);
-            })
-            .catch((err) => {
-              this.badinfo = true;
-              console.error(`L'utilisateur existe deja.\nErreur: ${err}`);
-            })
-        } catch (error) {
-          console.error('Erreur lors de la communication avec le serveur:', error);
-        }
-      },
-      clearError() {
-        this.badinfo = false, this.badcode = false, this.badIP = false
+    submitForm() {
+      if (this.formData.ifu.toString().length !== 12) {
+        this.ifuError = "L'IFU doit contenir exactement 12 chiffres.";
+        return;
       }
+      if (this.formData.nip.toString().length !== 9) {
+        this.nipError = "Le NIP doit contenir exactement 10 chiffre ";
+        return;
+      }
+
+      console.log('Données du formulaire envoyées à l\'API :', this.formData);
+
+      axios.post('http://localhost:8000/api/register', {
+        nom: this.formData.nom,
+        prenoms: this.formData.prenoms,
+        ifu: this.formData.ifu,
+        nip: this.formData.nip,
+        profession: this.formData.profession,
+        email: this.formData.email,
+        password: this.formData.password,
+        tel: this.formData.tel
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+      .then(() => {
+        this.success = true;
+          setTimeout(() => {
+            this.success = false;
+          }, 2000);
+          this.router.push('')
+      })
+      .catch((err) => {
+        console.error(err);
+        this.badinfo = true;
+      });
     },
-    mounted() {
-      document.title = "inscription utilisateur";
+
+    clearError() {
+      this.badinfo = false;
+      this.badcode = false;
     }
-  };
-  </script>
+  },
+};
+</script>
 
-<style scoped>
-#page.background-image {
-  position: absolute;
-  top: 0vh;
-  left: 0vw;
-  background-image: url('../assets/2.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat:no-repeat;
-  height: 100vh; /* Utilisez 100vh pour couvrir la hauteur de la fenêtre visible */
-  width: 100vw; /* Utilisez 100 % pour couvrir toute la largeur de la fenêtre */
-}
-#ajout_compte{
-  position: absolute;
-  top: 20px;
-   left: 260px;
-  font-size: xxx-large;
-  font-weight: 900;
-  color: rgb(90, 2, 90);                
-}
-#Nature-compte {
-  position: absolute;
-  top: 90px;
-   left: 300px;
-  font-size: 20px;
-  font-weight: 900;
-  color: rgb(90, 2, 90);
-}
-.form-image {
-  width: 70px; /* Largeur de l'image */
-  height: 70px; /* Hauteur de l'image */
-  margin-right: 20px; /* Espacement entre l'image et le formulaire */
-  /* Autres styles d'image */
-}
-#Nom {
-  position: absolute;
-  top: 170px;
-   left: 230px;
-   width: 500px;
-   border-radius: 50px;
-   height: 45px;
-}
-#num_ip {
-  position: absolute;
-  top: 290px;
-   left: 230px;
-   width: 500px;
-   border-radius: 50px;
-   height: 45px;
-}
-#adresse {
-  position: absolute;
-  top: 230px;
-   left: 230px;
-   width: 500px;
-   border-radius: 50px;
-   height: 45px;
 
-}
-#phone_num {
-  position: absolute;
-  top: 350px;
-   left: 230px;
-   width: 500px;
-   border-radius: 50px;
-   height: 45px;
-}
-#id_code_user {
-  position: absolute;
-  top: 460px;
-   left: 225px;
-   width: 500px;
-   border-radius: 50px;
-   height: 45px;
-}
-
-#img{
-  position: absolute;
-   left: 170px;
-}
-#log {
-  position: absolute;
-  top: 600px;
-   left: 270px;
-   width: 390px;
-   background-color: rgb(73, 6, 73);
-   border-radius: 50px;
-   height: 50px;
-}
-#log:hover {
-  background-color: maroon;
-}
-#gen_btm{
-  position: absolute;
-  top: 410px;
-   left: 230px;
-   width: 100px;
-   background-color: rgb(73, 6, 73);
-   border-radius: 50px;
-}
-#status {
-  margin-bottom: -30px;
-}
-
-#condition {
-  margin-bottom: -80px;
-}
-
-.txt-click {
-  cursor: pointer;
-  color: rgb(16, 16, 16);
-  font-weight: bold;
-}
-
-.txt-click:hover {
-  text-decoration: underline;
-}
-
-input:invalid {
-    border: 1px solid red;
-}
-  /* Style pour les champs valides */
-  input:valid {
-    border: 1px solid green;
+  <style scoped>
+  #page.background-image {
+    position: absolute;
+    top: 0vh;
+    left: 0vw;
+    background-image: url('../assets/2.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat:no-repeat;
+    height: 100vh;
+    width: 100vw;
   }
-#checkbox-cond {
-  position: relative;
-  top: 465px;
-  left: -210px;
-}
-#know-more{
-  position: relative;
-  top: 435px;
-  left: 570px;
-  font-size: larger;
-}
-#txt-cond {
-  position: relative;
-  top: 506px;
-  left: 240px;
-  font-size: larger;
-}
-#know_more:hover {
-  color:  rgb(99, 13, 99);
-}
+  .form-image {
+    width: 70px;
+    height: 70px;
+  margin-right: 20px;
+  }
 
-#nav {
-  position: absolute;
-}
+  #ajout_compte{
+    position: absolute;
+    top: 20px;
+    left: 130px;
+    font-size: xxx-large;
+    font-weight: 900;
+    color: rgb(90, 2, 90);
+  }
+
+  #Nature-compte {
+    position: absolute;
+    top: 90px;
+    left: 230px;
+    font-size: 20px;
+    font-weight: 900;
+    color: rgb(90, 2, 90);
+  }
+
+  #Designation {
+    position: absolute;
+    top: 170px;
+    left: 70px;
+    width: 500px;
+    border-radius: 50px;
+    height: 45px;
+  }
+
+  #IFU{
+    position: absolute;
+    top: 290px;
+    left: 70px;
+    width: 500px;
+    border-radius: 50px;
+    height: 45px;
+  }
+
+  #adresse {
+    position: absolute;
+    top: 230px;
+    left: 70px;
+    width: 500px;
+    border-radius: 50px;
+    height: 45px;
+  } 
+
+  #paswrd {
+    position: absolute;
+    top: 350px;
+    left: 70px;
+    width: 500px;
+    border-radius: 50px;
+    height: 45px;
+  }
+
+  #Contact {
+    position: absolute;
+    top: 410px;
+    left: 70px;
+    width: 500px;
+    border-radius: 50px;
+    height: 45px;
+  }
+
+  #dir_name {
+    position: absolute;
+    top: 170px;
+    left: 800px;
+    width: 500px;
+    border-radius: 50px;
+    height: 45px;
+  }
+
+  #dir_Contact{
+    position: absolute;
+    top: 230px;
+    left: 800px;
+    width: 500px;
+    border-radius: 50px;
+    height: 45px;
+  }
+
+  #gen_btm{
+    position: absolute;
+    top: 350px;
+    left: 800px;
+    width: 100px;
+    background-color: rgb(73, 6, 73);
+    border-radius: 50px;
+  }
+
+  #gen_btm:hover {
+    background-color: maroon;
+  }
+
+  #user_code_id {
+    position: absolute;
+    top: 395px;
+    left: 800px;
+    width: 500px;
+    border-radius: 50px;
+    height: 45px;
+  }
+
   #ok-msg {
-    color:rgb(48, 177, 1)
+    color:rgb(48, 177, 1);
   }
 
   .form {
-    background-color: rgb(255, 255, 255);
-    border: 1px solid #ccc;
-    padding: 2em;
-    border-radius: 50px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    width: 900px;
-    height: 700px;
-    position: absolute;
-    top:  100px;
-    left: 450px;
-    margin: 0;
-  }
+      background-color: rgb(255, 255, 255);
+      border: 1px solid #ccc;
+      padding: 2em;
+      border-radius: 50px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 1350px;
+      height: 620px;
+      position: absolute;
+      top:  50px;
+      left: 240px;
+      margin: 0;
+    }
 
   input {
     width: 100%;
@@ -275,6 +253,20 @@ input:invalid {
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
+  }
+
+  #log {
+    position: absolute;
+    top: 560px;
+    left: 510px;
+    width: 390px;
+    background-color: rgb(73, 6, 73);
+    border-radius: 50px;
+    height: 45px;
+  }
+
+  #log:hover {
+    background-color: maroon;
   }
 
   button {
@@ -294,9 +286,7 @@ input:invalid {
     color: red;
     font-size: 10px;
   }
-
-  select {
-    margin-bottom: 10px;
-  }
-</style>
-
+  .msgsuccess {
+  color: green;
+}
+  </style>

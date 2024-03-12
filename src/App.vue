@@ -13,9 +13,7 @@ export default {
 </script>
 
 <style>
-#app {
-  width: 67%; /* La page prendra 67% de la largeur du navigateur */
-}
+
 
 /*
   [v-cloak] {

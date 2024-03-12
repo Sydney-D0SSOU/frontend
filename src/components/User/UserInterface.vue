@@ -1,6 +1,6 @@
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 <template>
-    <div v-if="authorized" id="page">
+    <div  id="page">
         <!-- <Nav/> -->
             <!-- <bar-chart ref="barrePerc"></bar-chart> -->
             <!-- <Char/> -->
@@ -313,7 +313,6 @@
             </div>
         </div>
     </div>
-    <NoAccess v-else></NoAccess>
 </template>
 
 <script>

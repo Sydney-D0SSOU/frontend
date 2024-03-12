@@ -1,16 +1,14 @@
 <template>
-  <div id="page">
+  <div id="main">  
+    <center>
+      <h1>Connectez-vous !</h1>
 
-    <h1>Connectez-vous !</h1>
-    <center class="mt-5">
-    <form class="mt-5">
-      <img src="../../assets/score.png" alt="Image d'en-tête">
-      <div id="formulaire">
-        <input type="text" v-model="formData.code_id" @input="clearError" placeholder="Code ID:" required>
-        <input type="password" v-model="formData.passwd" @input="clearError" placeholder="Password" required>
-        <h6 id="msgerr" v-if="badinfo">Identifiants incorrect !</h6>
-        <button @click.prevent="Login" type="submit">Se connecter</button>
-      </div>
+    <form class="mt-5" @submit.prevent="submitForm">
+      <img src="../../assets/score.png" id="p1" alt="Image d'en-tête"/>
+      <input type="text" v-model="formData.unique" @input="clearError" placeholder="Code ID:" required>
+      <input type="password" v-model="formData.password" @input="clearError" placeholder="Password" required>
+      <h6 id="msgerr" v-if="badinfo">Identifiants incorrect !</h6>
+      <button type="submit">Se connecter</button>
     </form>
     </center>
   </div>
@@ -18,84 +16,95 @@
 
 <script>
 import axios from 'axios';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'LoginVue',
-  components: {
-    
-  },
   data() {
     return {
       formData: {
-        code_id: '',
-        passwd: '',
+        unique: '',
+        password: '',
       },
       badinfo: false
     };
   },
   methods: {
-    async Login() {
-      console.log(`Someone try login`);
+    async submitForm() {
+      // Reset error message
+      this.badinfo = false;
+
+      // Check if fields are empty
+      if (!this.formData.unique || !this.formData.password) {
+        this.badinfo = true;
+        return;
+      }
+
       try {
-        axios.post('http://localhost:3100/login', this.formData, {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then((response) => {
-          const data = response.data
-          localStorage.setItem('token', data.token);
-          const infoJSON = JSON.stringify(data.info_member);
-          localStorage.setItem('memberInfo', infoJSON);
-          this.$router.push(`/${data.route}`);
-          console.log('Connexion réussie !');
-        })
-        .catch((err) => {
-          this.badinfo = true;
-          console.error(`Identifiants incorrect !\nÉchec de la connexion: ${err}`);
-        })
+        const response = await axios.post('http://localhost:8000/api/login', {
+          unique_id: this.formData.unique,
+          password: this.formData.password
+        });
+
+        // Check the user object in the response to determine the user type
+        const user = response.data.user;
+        if (user.personne_juridique) {
+          const connectId1 = response.data.user.personne_juridique.id;
+          localStorage.setItem('connectId', connectId1);
+          console.log("User data:", connectId1);
+          this.showSuccessMessage = true; // Assuming you define showSuccessMessage
+          setTimeout(() => {
+           this.router.push('/persAsser'); // Redirect to dashboard for personne juridique after a delay
+          }, 2000); // Redirect after 2 seconds
+        } else if (user.front_office) {
+          const connectId = response.data.user.front_office.id;
+          localStorage.setItem('connectId', connectId);
+          console.log("User data:", connectId);
+          this.showSuccessMessage = true; // Assuming you define showSuccessMessage
+          setTimeout(() => {
+            this.router.push('/frontOffices'); // Redirect to dashboard for personne juridique after a delay
+          }, 2000); // Redirect after 2 seconds
+          // Similar logic for other user types...
+        }
+
+        // Save the token to local storage for future authenticated requests
+        const token = response.data.token;
+        localStorage.setItem('token', token);
       } catch (error) {
-        console.error('Erreur lors de la communication avec le serveur:', error);
+        console.error('Error during login:', error);
+        this.badinfo = true;
       }
     },
     clearError() {
-      this.badinfo = false
-    },
-  
+      this.badinfo = false;
+    }
   },
-  
-}
+  setup() {
+    const router = useRouter();
+    const showSuccessMessage = ref(false); // Assuming you define showSuccessMessage
+    return { router, showSuccessMessage };
+  }
+};
 </script>
 
 <style scoped>
-
-#page {
+#main {
   background-image: url(../../assets/img.png);
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  height: 100vh;
-  width: 100%;
+  background-size: cover; /* Ajuste la taille de l'image */
+  height: 100vh; /* Hauteur égale à la taille de la fenêtre */
+  display: flex; /* Utilisation de Flexbox pour centrer verticalement */
+  justify-content: center; /* Centre le contenu horizontalement */
+  align-items: center; /* Centre le contenu verticalement */
 }
 
-img {
-  max-width: 50%; /* Ajustez la largeur maximale selon vos besoins */
-  height: auto; /* Cela maintiendra le rapport hauteur/largeur de l'image */
-  margin-bottom: 20px; /* Ajoutez un espacement sous l'image si nécessaire */
-  margin-left: 110px;
-}
-center{
-  margin-top: 5;
-}
-#nav {
-  position: relative;
+#p1 {
+  max-width: 50%;
+  height: auto;
+  margin-bottom: 20px;
 }
 
 form {
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  height: auto;
   width: 80%;
   max-width: 500px;
   border: 1px solid rgb(0, 0, 0);
@@ -103,21 +112,18 @@ form {
   padding: 20px;
   border-radius: 50px;
   box-shadow: 0 20px 20px rgba(0, 0, 0, 0.2);
-  margin-top: 40px;
-}
-
-#formulaire {
-  position: relative;
+  text-align: left; /* Aligne le texte à gauche à l'intérieur du formulaire */
+  margin-right: 200px;
 }
 
 input {
-  width: 100%;
+  width: calc(100% - 22px); /* Ajuste la largeur pour tenir compte du padding */
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid rgb(0, 0, 0);
   border-radius: 60px;
   background-color: #ffffff;
-  color: rgb(0, 0, 0)
+  color: rgb(0, 0, 0);
 }
 
 button {

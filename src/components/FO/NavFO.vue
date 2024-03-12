@@ -28,7 +28,6 @@
             <div v-if="options[4].value" id="all-comptes" class="opts">
                 <div @click="chooseOption(allComptes, 'PA')" :class="{'CompteSelect': allComptes[0].value}">Assermentées</div>
                 <div @click="chooseOption(allComptes, 'Banque')" :class="{'CompteSelect': allComptes[1].value}">Banque</div>
-                <div @click="chooseOption(allComptes, 'User')" :class="{'CompteSelect': allComptes[2].value}">Utilisateurs</div>
             </div>
             <div id="line" style="height: 1px; width: 240px; background-color: white; position: relative; left: 13px;"></div>
             <div @click="chooseOption(options, 'params')" id="parametre"  class="opt" :class="{'optionSelect': options[5].value}">
