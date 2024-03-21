@@ -39,10 +39,7 @@
 import Nav from './NavRp.vue';
 import {authAdmin} from '../../auth.js';
 import axios from 'axios'
-// import 'bootstrap/dist/css/bootstrap.css'; // Importez uniquement le fichier CSS
-// import 'bootstrap/dist/js/bootstrap.js'
-// import 'bootstrap/dist/css/bootstrap.css'; // Importez les styles CSS de Bootstrap
-// import 'bootstrap-vue/dist/bootstrap-vue.css';
+
 export default {
     mixins: [authAdmin],
     components: {
@@ -181,7 +178,6 @@ export default {
  
 #values:hover {
     background-color: rgb(241, 241, 241);
-    color:   
 }
 
 </style>

@@ -51,19 +51,26 @@ export default {
         const user = response.data.user;
         if (user.personne_juridique) {
           const connectId1 = response.data.user.personne_juridique.id;
-          localStorage.setItem('connectId', connectId1);
+          localStorage.setItem('connectId1', connectId1);
           console.log("User data:", connectId1);
-          this.showSuccessMessage = true; // Assuming you define showSuccessMessage
           setTimeout(() => {
            this.router.push('/persAsser'); // Redirect to dashboard for personne juridique after a delay
           }, 2000); // Redirect after 2 seconds
         } else if (user.front_office) {
           const connectId = response.data.user.front_office.id;
-          localStorage.setItem('connectId', connectId);
+          localStorage.setItem('connectId2', connectId);
           console.log("User data:", connectId);
-          this.showSuccessMessage = true; // Assuming you define showSuccessMessage
           setTimeout(() => {
-            this.router.push('/frontOffices'); // Redirect to dashboard for personne juridique after a delay
+            this.router.push('/frontOffices'); // Redirect to dashboard for front office after a delay
+          }, 2000); // Redirect after 2 seconds
+          // Similar logic for other user types...
+        } else if (user.admin_pays) {
+          console.log(response.data)
+          const connectId = response.data.user.admin_pays.id;
+          localStorage.setItem('connectId3', connectId);
+          console.log("User data:", connectId);
+          setTimeout(() => {
+            this.router.push('/representant-pays'); // Redirect to dashboard for admin pays after a delay
           }, 2000); // Redirect after 2 seconds
           // Similar logic for other user types...
         }
@@ -87,6 +94,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 #main {

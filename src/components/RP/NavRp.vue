@@ -47,8 +47,8 @@ export default {
             options: [
                 { name: 'acceuil', path: '/representant-pays', value: true },
                 { name: 'licence', path: '/representant-pays/licences-vendues', value: false },
-                { name: 'stats', path: '/admin', value: false },
-                { name: 'transaction', path: '/admin', value: false },
+                { name: 'stats', path: '/', value: false },
+                { name: 'transaction', path: '/', value: false },
                 { name: 'compte', path: '/representant-pays/infos-FO', value: false },
                 { name: 'params', path: '/admin', value: false },
                 { name: 'log out', path: '/', value: false },

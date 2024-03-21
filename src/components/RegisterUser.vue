@@ -41,13 +41,14 @@ export default {
         profession: '',
         email: '', 
         password: '', 
-        tel: ''
+        tel: '',
+        personne_juridique_id:localStorage.getItem('connectId1')
       },
       nipError:'',
       ifuError:'',
       badinfo: false, 
       success: false, 
-      badcode: false, 
+      badcode: false,
     };
   },
   methods: {
@@ -66,40 +67,46 @@ export default {
         return;
       }
       if (this.formData.nip.toString().length !== 9) {
-        this.nipError = "Le NIP doit contenir exactement 10 chiffre ";
+        setTimeout(() => {
+          this.nipError = "Le NIP doit contenir exactement 9 chiffres ";
+        }, 2000);
         return;
       }
+      this.formData.nip = parseInt(this.formData.nip);
+this.formData.tel = parseInt(this.formData.tel);
+      const formDataJson = JSON.stringify(this.formData); // Convertir l'objet en JSON
 
-      console.log('Données du formulaire envoyées à l\'API :', this.formData);
+console.log('Données du formulaire envoyées à l\'API :', formDataJson,this.formData); 
+// Afficher les données JSON dans la console
 
-      axios.post('http://localhost:8000/api/register', {
-        nom: this.formData.nom,
-        prenoms: this.formData.prenoms,
-        ifu: this.formData.ifu,
-        nip: this.formData.nip,
-        profession: this.formData.profession,
-        email: this.formData.email,
-        password: this.formData.password,
-        tel: this.formData.tel
-      }, {
+      axios.post('http://localhost:8000/api/register', this.formData, {
         headers: {
           'Content-Type': 'application/json'
         },
       })
       .then(() => {
-        this.success = true;
-          setTimeout(() => {
-            this.success = false;
-          }, 2000);
-          this.router.push('')
-      })
-      .catch((err) => {
-        console.error(err);
-        this.badinfo = true;
-      });
-    },
+    this.success = true;
+      setTimeout(() => {
+        this.success = false;
+      }, 2000);
+       // reinitialisation des variables
+    this.formData.nom =''; 
+    this.formData.prenoms='';
+    this.formData.ifu ='';
+    this.formData.nip =''; 
+    this.formData.profession ='';
+    this.formData.email=''; 
+    this.formData.password='';
+    this.formData.tel='';
+   })
+  .catch((err) => {
+    console.error(err);
+   
+    this.badinfo = true;
+  });
+},
 
-    clearError() {
+ clearError() {
       this.badinfo = false;
       this.badcode = false;
     }

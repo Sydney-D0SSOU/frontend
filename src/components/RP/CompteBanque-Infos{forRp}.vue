@@ -177,7 +177,6 @@ export default {
  
 #values:hover {
     background-color: rgb(241, 241, 241);
-    color:   
 }
 
 </style>

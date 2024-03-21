@@ -1,5 +1,5 @@
 <template>
-    <div v-if="authorized" id="page">
+    <div v-if="isConnected" id="page">
         <Nav id="nav"/>
         <div id="dash-name">Dashboard</div>
         <input type="text" id="recherche" style="text-indent: 40px; overflow: show" placeholder="Recherche">
@@ -61,18 +61,27 @@
             </div>
         </div>
     </div>
-    <NoAccess v-else></NoAccess>
+    <div v-else>
+        <Noaccess/>
+    </div>
 </template>
 
 <script>
-import NoAccess from '../AccessDenied.vue';
 import Nav from './NavRp.vue';
+import Noaccess from './../AccessDenied.vue'
 import {authRp} from '../../auth.js';
 export default {
     mixins: [authRp],
     components: {
-        Nav, NoAccess
+        Nav,
+        Noaccess
     },
+    computed: {
+    isConnected() {
+      // Vérifier si l'identifiant de connexion est présent dans le stockage local
+      return localStorage.getItem('connectId3') !== null;
+    }
+   },
     data() {
         return {
             memberInfo: {},
@@ -113,9 +122,7 @@ export default {
     },
     methods: {
     },
-    mounted() {
-        document.title = "Admin"; // Mettez le titre que vous souhaitez afficher
-    }
+   
 }
 </script>
 

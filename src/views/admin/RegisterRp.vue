@@ -1,13 +1,13 @@
 <template>
   <div id="page" class="background-image">
     <form class="form" @submit.prevent="submitForm">
-      <img src="../assets/addcmp.png" alt="Image de formulaire" class="form-image">
+      <img src="../../assets/addcmp.png" alt="Image de formulaire" class="form-image">
       <p id="ajout_compte">Ajouter compte </p>
-      <p id="Nature-compte">[Une Personne Assermentée]</p>
-      <input id="Designation" type="text" v-model="formData.nom" placeholder="Nom de la personne assermentée:" @input="clearError" required>
+      <p id="Nature-compte">[Une Reprensant pays]</p>
+      <input id="Designation" type="text" v-model="formData.nom" placeholder="Nom Reprensant pays:" @input="clearError" required>
       <input id="IFU" type="text" v-model="formData.ifu" placeholder="IFU:" @input="clearError" required>
       <input id="paswrd" type="text" v-model="formData.tel" placeholder="Téléphone:" @input="clearError" required>
-      <input id="adresse" type="text" v-model="formData.prenoms" placeholder="Prenom de la personne assermentée:" @input="clearError" required>
+      <input id="adresse" type="text" v-model="formData.prenoms" placeholder="Prenom Reprensant pays:" @input="clearError" required>
       <input id="Contact" type="text" v-model="formData.nip" placeholder="Numéro d'identification personnel:" @input="clearError" required>
       <br>
       <div id="dirigeant">
@@ -37,12 +37,11 @@ export default {
         nom: '', 
         prenoms: '',
         ifu: '',
-        nip: '', 
+        nip: 0, 
         profession: '',
         email: '', 
         password: '', 
-        tel: '',
-        front_office_id: localStorage.getItem('connectId2') 
+        tel: 0,
       },
       nipError:'',
       ifuError:'',
@@ -62,58 +61,49 @@ export default {
       this.formData.password = code;
     },
     submitForm() {
-      if (this.formData.ifu.toString().length !== 12) {
-        this.ifuError = "L'IFU doit contenir exactement 12 chiffres.";
-        return;
-      }
-      if (this.formData.nip.toString().length !== 9) {
-        this.nipError = "Le NIP doit contenir exactement 09 chiffre ";
-        return;
-      }
-      const formDataJson = JSON.stringify(this.formData); // Convertir l'objet en JSON
+  if (this.formData.ifu.toString().length !== 12) {
+    this.ifuError = "L'IFU doit contenir exactement 12 chiffres.";
+    return;
+  }
+  if (this.formData.nip.toString().length !== 9) {
+    this.nipError = "Le NIP doit contenir exactement 9 chiffres ";
+    return;
+  }
 
-      console.log('Données du formulaire envoyées à l\'API :', formDataJson,this.formData); 
+  const formDataJson = JSON.stringify(this.formData); // Convertir l'objet en JSON
+
+  console.log('Données du formulaire envoyées à l\'API :', formDataJson,this.formData); 
   // Afficher les données JSON dans la console
   this.formData.nip = parseInt(this.formData.nip);
   this.formData.tel = parseInt(this.formData.tel);
-      axios.post('http://localhost:8000/api/register/personne-ass', {
-        nom: this.formData.nom,
-        prenoms: this.formData.prenoms,
-        ifu: this.formData.ifu,
-        nip: this.formData.nip,
-        profession: this.formData.profession,
-        email: this.formData.email,
-        password: this.formData.password,
-        tel: this.formData.tel,
-        front_office_id:this.formData.front_office_id
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-      })
-      .then(() => {
-        this.success = true;
-          setTimeout(() => {
-            this.success = false;
-          }, 2000);
-          // Réinitialisation des champs du formulaire
-  this.formData.nom = '';
-  this.formData.prenoms = '';
-  this.formData.ifu = '';
-  this.formData.nip = '';
-  this.formData.profession = '';
-  this.formData.email = '';
-  this.formData.password = '';
-  this.formData.tel = '';
-  // Réinitialisation des erreurs
-  
-          this.router.push('/inscription-persAsser')
-      })
-      .catch((err) => {
-        console.error(err);
-        this.badinfo = true;
-      });
+
+  axios.post('http://localhost:8000/api/register-admin-pays', this.formData, { 
+    headers: {
+      'Content-Type': 'application/json'
     },
+  })
+  .then(() => {
+    this.success = true;
+      setTimeout(() => {
+        this.success = false;
+      }, 2000);
+       // reinitialisation des variables
+    this.formData.nom =''; 
+    this.formData.prenoms='';
+    this.formData.ifu ='';
+    this.formData.nip =''; 
+    this.formData.profession ='';
+    this.formData.email=''; 
+    this.formData.password='';
+    this.formData.tel='';
+   })
+  .catch((err) => {
+    console.error(err);
+   
+    this.badinfo = true;
+  });
+},
+
 
     clearError() {
       this.badinfo = false;
@@ -129,7 +119,7 @@ export default {
     position: absolute;
     top: 0vh;
     left: 0vw;
-    background-image: url('../assets/2.jpg');
+    background-image: url('../../assets/2.jpg');
     background-size: cover;
     background-position: center;
     background-repeat:no-repeat;

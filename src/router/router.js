@@ -9,7 +9,7 @@ import InscriptionFront from '@components/RegisterFront.vue';
 import InscriptionPersAsser from '@components/RegisterPersAsser.vue';
 import InscriptionUser from '@components/RegisterUser.vue';
 import InscriptionBank from '@components/RegisterBank.vue';
-import InscriptionRp from '@components/RegisterRp.vue';
+import InscriptionRp from '@views/admin/RegisterRp.vue';
 import LicenceVendue from '@components/LicencesVendues.vue';
 import RpInfos from '@components/CompteRp-Infos.vue';
 import FOInfos from '@components/CompteFO-Infos.vue';
@@ -24,8 +24,8 @@ import BanqueInfosForFO from '@components/FO/CompteBanque-Infos{forFO}.vue';
 import UserInfosForFO from '@components/FO/CompteUser-Infos{forFO}.vue';
 import LicenceVendueForFO from '@components/FO/LicencesVendues{forFO}.vue';
 
-import PerssAsser from '@components/PersAsser.vue';
-
+import PerssAsser from '@components/PA/PersAsser.vue';
+import contratP from '@components/PA/acte.vue';
 import Bank from '@components/InterfaceBanque.vue';
 
 import User from '@components/User/UserInterface.vue';
@@ -67,6 +67,7 @@ const routes = [
   { path: '/user', component: User},
   
   { path: '/banque', component: Bank},
+  { path: '/acteP', component: contratP},
   
   { path: '/persAsser', component: PerssAsser},
   { path: '/connexion-user', component: ConnexionUser },
