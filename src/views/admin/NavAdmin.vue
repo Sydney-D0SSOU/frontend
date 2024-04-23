@@ -2,7 +2,7 @@
     <div id="nav">
         <img id="logo" src="@assets/logoscoreCut.png" alt="Logo SCORE">
         <div id="chiffre-affaire">Chiffre d'affaires<br>
-            <span style="font-size: 25px; font-weight: 900">35 000 000 fcfa</span>
+            <span style="font-size: 25px; font-weight: 900">35000000 FCAF</span>
         </div>
         <div id="options" class="opts">
             <div @click="chooseOption(options, 'acceuil')" id="acceuil" class="opt" :class="{'optionSelect': options[0].value}">
@@ -18,7 +18,7 @@
                 <img src="@assets/stats.png" alt="logo de statistiques">
             </div>
             <div @click="chooseOption(options, 'transaction')" id="transactions" class="opt" :class="{'optionSelect': options[3].value}">
-                <div>Transactions</div>
+                <div>Contrats</div>
                 <img src="@assets/transaction.png" alt="logo de transaction">
             </div>
             <div @click="chooseOption(options, 'compte')" id="compte"  class="opt" :class="{'optionSelect': options[4].value}">
@@ -29,8 +29,8 @@
                 <div @click="chooseOption(allComptes, 'Rp')" :class="{'CompteSelect': allComptes[0].value}">Représentant pays</div>
                 <div @click="chooseOption(allComptes, 'FO')" :class="{'CompteSelect': allComptes[1].value}">Front Office</div>
                 <div @click="chooseOption(allComptes, 'PA')" :class="{'CompteSelect': allComptes[2].value}">Assermentées</div>
-                <div @click="chooseOption(allComptes, 'Banque')" :class="{'CompteSelect': allComptes[3].value}">Banque</div>
-                <div @click="chooseOption(allComptes, 'User')" :class="{'CompteSelect': allComptes[4].value}">Utilisateurs</div>
+                <div @click="chooseOption(allComptes, 'Banque')" :class="{'CompteSelect': allComptes[3].value}">Banques</div>
+                <div @click="chooseOption(allComptes, 'User')" :class="{'CompteSelect': allComptes[4].value}">Civils</div>
             </div>
             <div id="line" style="height: 1px; width: 240px; background-color: white; position: relative; left: 13px;"></div>
             <div @click="chooseOption(options, 'params')" id="parametre"  class="opt" :class="{'optionSelect': options[5].value}">
@@ -58,9 +58,9 @@ export default {
     data() {
         return {
             options: [
-                { name: 'acceuil', path: '/admin', value: true },
+                { name: 'acceuil', path: '/statsgr', value: true },
                 { name: 'licence', path: '/licences-vendues', value: false },
-                { name: 'stats', path: '/admi', value: false },
+                { name: 'stats', path: '/statsgr', value: false },
                 { name: 'transaction', path: '/admi', value: false },
                 { name: 'compte', path: '/infos-Rp', value: false },
                 { name: 'params', path: '/admi', value: false },
@@ -90,10 +90,8 @@ export default {
             let objetfind = list.find(objet => objet.name === choosed)
             objetfind.value = true
             this.offOthers(list, choosed)
-            const optionsJSON = JSON.stringify(this.options);
-            const allComptesJSON = JSON.stringify(this.allComptes)
-            localStorage.setItem('options{Admin}', optionsJSON);
-            localStorage.setItem('allComptes{Admin}', allComptesJSON);
+            
+           
             this.$router.push(`${objetfind.path}`);
         },
         Deconnect() {
@@ -137,7 +135,7 @@ export default {
     position: fixed;
     top: 0px;
     left: 0px;
-    height: 950px;
+    height: 1100px;
     width: 280px;
     background-color: rgb(0, 0, 0);
 }

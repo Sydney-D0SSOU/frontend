@@ -1,7 +1,7 @@
 <template>
   <div id="main">  
     <center>
-      <h1>Connectez-vous !</h1>
+      <h1 id="one">Connectez-vous !</h1>
 
     <form class="mt-5" @submit.prevent="submitForm">
       <img src="../../assets/score.png" id="p1" alt="Image d'en-tête"/>
@@ -16,8 +16,10 @@
 
 <script>
 import axios from 'axios';
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/store/store.js';
+import VueSweetalert2 from 'vue-sweetalert2';
+import Swal from 'sweetalert2';
 
 export default {
   name: 'LoginVue',
@@ -31,6 +33,30 @@ export default {
     };
   },
   methods: {
+    alertDisplay() {
+        // $swal function calls SweetAlert into the application with the specified configuration.
+        this.$swal({
+        title: 'Oops',
+    text: 'Vérifier vos identifiants',
+    icon: 'error', // Vous pouvez choisir entre 'warning', 'error', 'success' et 'info'
+    iconColor: 'red', // Spécifiez la couleur de l'icône ici
+    confirmButtonText: 'OK',
+    confirmButtonColor:'red'
+        
+    });
+      },
+      alertSuccess() {
+        // $swal function calls SweetAlert into the application with the specified configuration.
+        this.$swal({
+        title: 'Bien',
+    text: 'Authenfication avec Suscess',
+    icon: 'Sucsess', // Vous pouvez choisir entre 'warning', 'error', 'success' et 'info'
+    iconColor: 'green', // Spécifiez la couleur de l'icône ici
+    confirmButtonText: 'OK',
+    confirmButtonColor:'green'
+        
+    });
+      },
     async submitForm() {
       // Reset error message
       this.badinfo = false;
@@ -47,63 +73,63 @@ export default {
           password: this.formData.password
         });
 
-        // Check the user object in the response to determine the user type
+        const userStore = useUserStore();
         const user = response.data.user;
         if (user.personne_juridique) {
-          const connectId1 = response.data.user.personne_juridique.id;
-          localStorage.setItem('connectId1', connectId1);
-          console.log("User data:", connectId1);
-          setTimeout(() => {
-           this.router.push('/persAsser'); // Redirect to dashboard for personne juridique after a delay
-          }, 2000); // Redirect after 2 seconds
+          userStore.setUser(response.data.user);
+       
+          this.alertSuccess()
+          this.$router.push('/persAsser'); // Utilisez $router au lieu de router
+          
         } else if (user.front_office) {
-          const connectId = response.data.user.front_office.id;
-          localStorage.setItem('connectId2', connectId);
-          console.log("User data:", connectId);
-          setTimeout(() => {
-            this.router.push('/frontOffices'); // Redirect to dashboard for front office after a delay
-          }, 2000); // Redirect after 2 seconds
-          // Similar logic for other user types...
+          userStore.setUser(response.data.user);
+          this.alertSuccess()
+            this.$router.push('/frontOffices'); // Utilisez $router au lieu de router
+         
         } else if (user.admin_pays) {
-          console.log(response.data)
-          const connectId = response.data.user.admin_pays.id;
-          localStorage.setItem('connectId3', connectId);
-          console.log("User data:", connectId);
-          setTimeout(() => {
-            this.router.push('/representant-pays'); // Redirect to dashboard for admin pays after a delay
-          }, 2000); // Redirect after 2 seconds
-          // Similar logic for other user types...
+          userStore.setUser(response.data.user);
+          this.alertSuccess()
+          this.$router.push('/representant-pays'); // Utilisez $router au lieu de router
+        
+        } else if (user.institution_financiere) {
+          userStore.setUser(response.data.user);
+          this.alertSuccess()
+          this.$router.push('/banque'); // Utilisez $router au lieu de router
+        
         }
 
-        // Save the token to local storage for future authenticated requests
         const token = response.data.token;
         localStorage.setItem('token', token);
-      } catch (error) {
+      }
+       catch (error) {
+        this.alertDisplay(); // Appel de la méthode showAlert dans le bloc catch
         console.error('Error during login:', error);
         this.badinfo = true;
       }
     },
+    
     clearError() {
       this.badinfo = false;
     }
   },
   setup() {
     const router = useRouter();
-    const showSuccessMessage = ref(false); // Assuming you define showSuccessMessage
-    return { router, showSuccessMessage };
+    return { router };
   }
 };
 </script>
 
-
 <style scoped>
+#one{
+  text-decoration-color: #ffffff;
+}
 #main {
   background-image: url(../../assets/img.png);
-  background-size: cover; /* Ajuste la taille de l'image */
-  height: 100vh; /* Hauteur égale à la taille de la fenêtre */
-  display: flex; /* Utilisation de Flexbox pour centrer verticalement */
-  justify-content: center; /* Centre le contenu horizontalement */
-  align-items: center; /* Centre le contenu verticalement */
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #p1 {
@@ -120,12 +146,13 @@ form {
   padding: 20px;
   border-radius: 50px;
   box-shadow: 0 20px 20px rgba(0, 0, 0, 0.2);
-  text-align: left; /* Aligne le texte à gauche à l'intérieur du formulaire */
-  margin-right: 200px;
+  text-align: left;
+  margin-right: 0px;
+  margin-left: 50px;
 }
 
 input {
-  width: calc(100% - 22px); /* Ajuste la largeur pour tenir compte du padding */
+  width: calc(100% - 22px);
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid rgb(0, 0, 0);

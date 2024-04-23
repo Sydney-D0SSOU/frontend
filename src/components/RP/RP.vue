@@ -69,9 +69,7 @@
 <script>
 import Nav from './NavRp.vue';
 import Noaccess from './../AccessDenied.vue'
-import {authRp} from '../../auth.js';
 export default {
-    mixins: [authRp],
     components: {
         Nav,
         Noaccess
@@ -79,7 +77,7 @@ export default {
     computed: {
     isConnected() {
       // Vérifier si l'identifiant de connexion est présent dans le stockage local
-      return localStorage.getItem('connectId3') !== null;
+      return localStorage.getItem('token') !== null;
     }
    },
     data() {

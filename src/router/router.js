@@ -11,11 +11,11 @@ import InscriptionUser from '@components/RegisterUser.vue';
 import InscriptionBank from '@components/RegisterBank.vue';
 import InscriptionRp from '@views/admin/RegisterRp.vue';
 import LicenceVendue from '@components/LicencesVendues.vue';
-import RpInfos from '@components/CompteRp-Infos.vue';
-import FOInfos from '@components/CompteFO-Infos.vue';
-import BanqueInfos from '@components/CompteBanque-Infos.vue';
-import UserInfos from '@components/CompteUser-Infos.vue';
-import PAInfos from '@components/ComptePA-Infos.vue';
+import RpInfos from '@views/admin/CompteRp-Infos.vue';
+import FOInfos from '@views/admin/CompteFO-Infos.vue';
+import BanqueInfos from '@views/admin/CompteBanque-Infos.vue';
+import UserInfos from '@views/admin/CompteUser-Infos.vue';
+import PAInfos from '@views/admin/ComptePA-Infos.vue';
 
 import FO from '@components/FO/FO.vue';
 import FOInfosForFO from '@components/FO/CompteFO-Infos{forFO}.vue';
@@ -37,7 +37,11 @@ import PAInfosForRp from '@components/RP/ComptePA-Infos{forRp}.vue';
 import BanqueInfosForRp from '@components/RP/CompteBanque-Infos{forRp}.vue';
 import UserInfosForRp from '@components/RP/CompteUser-Infos{forRp}.vue';
 import LicenceVendueForRp from '@components/RP/LicencesVendues{forRp}.vue';
-
+import listCivil from '@/components/list/listCivil.vue';
+import listContrat from '@/components/list/listContrat.vue';
+import ContratDetails from '@/components/list/ContratDetails';
+import stats from '@components/stats/charts.vue';
+import statAd from '@views/admin/statsAd.vue';
 const routes = [
   { path: '/', 
   component: home },
@@ -78,6 +82,14 @@ const routes = [
   { path: '/representant-pays/infos-Banque', component: BanqueInfosForRp},
   { path: '/representant-pays/infos-User', component: UserInfosForRp},
   { path: '/representant-pays/licences-vendues', component: LicenceVendueForRp},
+  {path:'/listCivil', component: listCivil  },
+  {path:'/listContrat', component: listContrat  },
+  {path:'/actes-de-prets/:id', component: ContratDetails },
+  {path:'/stats', component:stats },
+  {path:'/statsgr', component:statAd }
+
+
+
 ];
 
 const router = createRouter({

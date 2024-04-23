@@ -1,47 +1,71 @@
-<template>
-  <div id="page">
-    <Nav class="nav-button"/>
-    <h1>Bienvenue Mr/Mme {{ memberInfo.name }}</h1>
-    <div class="button-container">
-      <button id="contrat" @click="registerActe">Enregitrer un contrat de prêt</button>
-      <button id="rUser" @click="registerUser">Inscrire un utilisateur</button>
-      <button id="cnxUser"  @click="connexionUser">Connexion utilisateur</button>
-    </div>
-  </div>
-</template>
-
 <script>
 import Nav from '../BarreNav.vue';
-import { authPersAsser } from '../../auth.js';
+import { useUserStore } from '@/store/store.js';
+import { computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router'; // Importez useRouter depuis Vue Router
 
 export default {
-  mixins: [authPersAsser],
   components: { Nav },
-  data() {
-    return {
-      memberInfo: {},
+  setup() {
+    const store = useUserStore();
+    const router = useRouter(); // Initialisez useRouter
+    const username = computed(() => store.user ? store.user.nom : null);
+
+    const registerUser = () => {
+      router.push('/inscription-user'); // Utilisez router.push pour naviguer
     };
-  },
-  created() {
-    const infos = JSON.parse(localStorage.getItem('memberInfo'));
-    if (infos) this.memberInfo = infos;
-  },
-  methods: {
-    registerUser() {
-      this.$router.push('/inscription-user');
-    },
-    registerActe() {
-      this.$router.push('/acteP');
-    },
-    connexionUser() {
-      this.$router.push('/connexion-user');
-    },
-  },
-  mounted() {
-    document.title = 'persAsser';
+
+    const registerActe = () => {
+      router.push('/acteP');
+    };
+    const registerContrat = () => {
+      router.push('/listContrat');
+    };
+
+    const connexionUser = () => {
+      router.push('/listCivil');
+    };
+
+    onMounted(() => {
+      document.title = 'persAsser';
+    });
+
+    return {
+      username,
+      registerUser,
+      registerActe,
+      connexionUser,
+      registerContrat
+    };
   },
 };
 </script>
+
+<template>
+  <div id="page">
+    <Nav class="nav-button"/>
+    <h1>Bienvenue Mr/Mme {{ username }} </h1> <br/>
+    <h1> N*1373892429748</h1>
+    <div class="card-container">
+      <div class="card">
+        <h2>Enregistrer un contrat de prêt</h2>
+        <p>Vous êtes prêt à enregistrer un nouveau contrat de prêt?</p>
+        <button id="register-acte" @click="registerActe">Enregistrer</button>
+      </div>
+      <div class="card">
+        <h2>Liste des contrats de prêt</h2>
+        <p>Rechercher et afficher les contrats de prêt</p>
+        <button id="register-acte" @click="registerContrat">Voir</button>
+      </div>
+      <div class="card">
+        <h2>Inscrire un utilisateur</h2>
+        <p>Envie de rejoindre notre communauté? Inscrivez-vous dès maintenant!</p>
+        <button id="register-user" @click="registerUser">Inscrire</button>
+      </div>
+      
+    </div>
+  </div>
+</template>
 
 <style>
 #page {
@@ -52,27 +76,46 @@ export default {
   align-items: center;
 }
 
-.button-container {
+.card-container {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between;
+  align-items: stretch;
+  margin-top: 50px;
+  width: 80%;
+}
+
+.card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  width: 30%;
+  margin-left : 10px;
+  text-align: center;
+}
+
+.card h2 {
+  color: #333;
+}
+
+.card p {
+  color: #666;
+  margin-bottom: 20px;
 }
 
 button {
-  background-color: rgb(110, 55, 34);
+  background-color: #8B4513; /* Marron */
   color: white;
-  margin: 10px; /* Espacement entre les boutons */
-  width: 200px;
-  height: 50px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
+  font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Animation de transition */
+  transition: box-shadow 0.3s ease; /* Animation de transition */
 }
 
 button:hover {
-  background-color: rgb(143, 140, 140);
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3); /* Ombre au survol */
 }
 
 /* Annulation du style pour le bouton "Se connecter" */
@@ -83,4 +126,15 @@ button:hover {
   border-radius: inherit;
   transition: inherit;
 }
+.card {
+  /* Autres styles... */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card button {
+  margin-top: auto; /* Pour aligner le bouton en bas de la carte */
+}
+
 </style>

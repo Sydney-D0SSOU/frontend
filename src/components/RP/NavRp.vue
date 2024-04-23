@@ -29,7 +29,7 @@
                 <div @click="chooseOption(allComptes, 'FO')" :class="{'CompteSelect': allComptes[0]?.value}">Front Office</div>
                 <div @click="chooseOption(allComptes, 'PA')" :class="{'CompteSelect': allComptes[1]?.value}">Assermentées</div>
                 <div @click="chooseOption(allComptes, 'Banque')" :class="{'CompteSelect': allComptes[2]?.value}">Banque</div>
-                <div @click="chooseOption(allComptes, 'User')" :class="{'CompteSelect': allComptes[3]?.value}">Utilisateurs</div>
+                <div @click="chooseOption(allComptes, 'User')" :class="{'CompteSelect': allComptes[3]?.value}">Civils</div>
             </div>
             <div id="line" style="height: 1px; width: 240px; background-color: white; position: relative; left: 13px;"></div>
             <div @click="Deconnect()" id="Deconnexion"  class="opt" :class="{'optionSelect': options[6]?.value}">

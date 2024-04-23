@@ -1,20 +1,20 @@
-import 'mdb-vue-ui-kit/css/mdb.min.css'
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router/router';
-import 'bootstrap/dist/css/bootstrap.css'; // Importez les styles CSS de Bootstrap
-// import 'bootstrap-vue/dist/bootstrap-vue.css'; // Importez les styles CSS de Bootstrap Vue
-// import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import 'bootstrap/dist/css/bootstrap.css'; 
+import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
-// Créez l'application Vue
 const app = createApp(App);
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate)
 
-// Utilisez le routeur
 app.use(router);
+app.use(pinia);
+app.use(VueSweetalert2);
+// Utilisez createPersistPlugin pour persister l'état de vos stores
 
-// Utilisez Bootstrap Vue et ses icônes (facultatif)
-// app.use(BootstrapVue);
-// app.use(IconsPlugin);
 
-// Montez l'application
 app.mount('#app');

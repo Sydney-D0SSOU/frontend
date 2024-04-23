@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import Nav from '../views/admin/NavAdmin.vue';
+import Nav from './NavAdmin.vue';
 import {authAdmin} from '../auth.js';
 import axios from 'axios'
 export default {
@@ -177,7 +177,7 @@ export default {
  
 #values:hover {
     background-color: rgb(241, 241, 241);
-    color:   
+    
 }
 
 </style>

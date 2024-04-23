@@ -13,7 +13,7 @@
   
     
     <script scoped>
-    import Nav from './NavFO.vue';
+    import Nav from './NavAdmin.vue';
     import listPA from '@/components/list/listPA.vue';
     export default {
       components: {

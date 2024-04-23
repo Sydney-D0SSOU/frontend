@@ -2,19 +2,7 @@
     <div  id="page">
         <Nav id="nav"/>
         <div id="dash-name">Dashboard</div>
-        <MDBInput
-    v-model="search1"
-    inputGroup
-    :formOutline="false"
-    wrapperClass="mb-3"
-    placeholder="Search"
-    aria-label="Search"
-    aria-describedby="button-addon2"
-  >
-    <MDBBtn color="success">
-      <MDBIcon icon="search" />
-    </MDBBtn>
-  </MDBInput>        <div id="butt-search"></div>
+            
         <div id="txt-superadmin">SUPER ADMIN</div>
         <img v-if="hasNotifs" id="notif-logo" @click="see_notif = !see_notif" src="" alt="cloche">
         <img v-else id="notif-logo" @click="see_notif = !see_notif" src="" alt="cloche">
@@ -77,9 +65,7 @@
 import { ref } from 'vue';
 import NoAccess from '../../components/AccessDenied.vue';
 import Nav from './NavAdmin.vue';
-import {authAdmin} from '../../auth.js';
 export default {
-    mixins: [authAdmin],
     components: {
         MDBInput,
       MDBBtn,

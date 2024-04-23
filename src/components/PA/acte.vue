@@ -2,7 +2,7 @@
   
 <template>
     <div id="page" class="background-image">
-      <form class="form" @submit.prevent="submitForm">
+      <form class="form" @submit.prevent="submitForm" enctype="multipart/form-data">
         <img src="../../assets/addcmp.png" alt="Image de formulaire" class="form-image">
         <p id="ajout_compte">Un contrat de Prêt</p>
         <p id="Nature-compte">[Prêt]</p>
@@ -20,8 +20,7 @@
             <input v-model="formData.datePret" type="date" placeholder="Date du Prêt" />
             <input v-model="formData.dureePret" type="number" placeholder="Durée du Prêt" />
             <input v-model="formData.engagement" type="text" placeholder="Engagement" />
-            <input type="text" v-model="formData.imageEngagement" placeholder="Image Engagement" />
-            <input type="text" v-model="formData.image_cip_preteur" placeholder="Image CIP Prêteur" />
+            <input type="file" ref="fileInput" @change="handleFileInputChange" placeholder="Image CIP Prêteur" />
           </div>
         </div>
         <button id="log" type="submit">Enregistrer</button>
@@ -31,13 +30,18 @@
   
   <script>
   import axios from 'axios';
+  import { useUserStore } from '@/store/store.js';
+  import Swal from 'sweetalert2';
+
+import { computed, onMounted } from 'vue';
   
   export default {
     name: 'RegisterVue',
     data() {
+      const store = useUserStore();
       return {
         formData: {
-          user_id:localStorage.getItem('connectId1') ,
+          user_id:store.user?.personne_juridique?.id || null,
           montantPret: 0,
           creancierInput: '', // Champ de saisie pour le créancier
           creancier: '', // ID du créancier
@@ -46,8 +50,7 @@
           datePret: '',
           dureePret: 0,
           engagement: '',
-          imageEngagement: '',
-          image_cip_preteur: '',
+          image_cip_preteur: null ,
           statutPret: 1,
           statut: "En attente de traitement"
         },
@@ -59,8 +62,10 @@
     methods: {
       searchUser(type) {
         const searchKey = type === 'creancier' ? this.formData.creancierInput : this.formData.preteurInput;
+        const token = localStorage.getItem("token");
+
         if (searchKey) {
-          axios.post(`http://localhost:8000/api/search-user`, { search_key: searchKey })
+          axios.post(`http://localhost:8000/api/users/search`, { search_key: searchKey },)
             .then((response) => {
               console.log("Response from search-user API:", response.data);
               if (type === 'creancier') {
@@ -83,12 +88,12 @@
       },
       submitForm() {
     // Vérifier si tous les champs sont remplis
-    const requiredFields = ['montantPret', 'creancier', 'preteur', 'datePret', 'dureePret', 'engagement', 'image_cip_preteur', 'statut'];
+    const requiredFields = ['montantPret', 'creancier', 'preteur', 'datePret', 'dureePret', 'engagement',  'statut'];
     const emptyFields = requiredFields.filter(field => !this.formData[field]);
 
     if (emptyFields.length > 0) {
       const message = "Veuillez remplir les champs suivants :\n" + emptyFields.join('\n- ');
-      alert(message);
+      this.alertError(message)
       return;
     }
 
@@ -98,40 +103,30 @@
     this.formData.preteur= parseInt(this.formData.preteur);
     this.formData.dureePret= parseInt(this.formData.dureePret);
     // Créer un nouvel objet FormData
-    const formData = new FormData();
+    const formDataToSend = new FormData();
 
-    // Ajouter les champs nécessaires à l'objet FormData
-    formData.append('user_id', this.formData.user_id);
-    formData.append('montantPret', this.formData.montantPret);
-    formData.append('creancier', this.formData.creancier);
-    formData.append('preteur', this.formData.preteur);
-    formData.append('datePret', this.formData.datePret);
-    formData.append('dureePret', this.formData.dureePret);
-    formData.append('engagement', this.formData.engagement);
-    formData.append('image_cip_preteur', this.formData.image_cip_preteur);
-    formData.append('engagement', this.formData.imageEngagement);
-    formData.append('statut', this.formData.statut);
-    formData.append('statutPret', this.formData.statutPret);
+// Ajout des champs de formulaire à l'objet FormData
+formDataToSend.append("user_id", this.formData.user_id);
+formDataToSend.append("montantPret", this.formData.montantPret);
+formDataToSend.append("creancier", this.formData.creancier);
+formDataToSend.append("preteur", this.formData.preteur);
+formDataToSend.append("datePret", this.formData.datePret);
+formDataToSend.append("dureePret", this.formData.dureePret);
+formDataToSend.append("engagement", this.formData.engagement);
+formDataToSend.append("image_cip_preteur", this.formData.image_cip_preteur);
+formDataToSend.append("statutPret", this.formData.statutPret);
+formDataToSend.append("statut", this.formData.statut);
 
-
-    // Afficher l'objet envoyé au backend dans la console
-    const objectToSend = {};
-    formData.forEach((value, key) => {
-      objectToSend[key] = value;
-    });
-    console.log("Data sent to backend:", objectToSend);
-
+    const token = localStorage.getItem("token");
+    console.log(token)
+ console.log (JSON.stringify(formDataToSend))
     // Effectuer la requête POST vers le backend
-    axios.post('http://localhost:8000/api/actes-de-prets', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+    axios.post('http://localhost:8000/api/actes-de-prets', formDataToSend )
       .then((response) => {
         console.log(response);
-        alert("Enregistrement réussi !");
+        this.alertSuccess("Le contrat a été ajouté avec succès");
         // reinitialisation des variables
-   this.formData.user_id= '';
+   this.formData.user_id= ''; 
    this.formData.montantPret= '';
     this.formData.creancier= '';
    this.formData.preteur= '';
@@ -139,15 +134,34 @@
     this.formData.dureePret= '';
  this.formData.engagement= '';
  this.formData.image_cip_preteur= '';
-     this.formData.imageEngagement= '';
      this.formData.statut= '';
    this.formData.statutPret= '';
       })
       .catch((error) => {
         console.error(error);
-        alert("Erreur lors de l'envoi.");
+        this.alertError("Informations invalides ");
       });
-}
+},
+handleFileInputChange(event) {
+  this.formData.image_cip_preteur = event.target.files[0];
+    },  
+alertError(message) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: message
+      });
+    },
+    alertSuccess(message) {
+      Swal.fire({
+        title: 'Bien',
+        text: message,
+        icon: 'success',
+        iconColor: 'green',
+        confirmButtonText: 'OK',
+        confirmButtonColor:'green'
+      });
+    }
 
 
     }

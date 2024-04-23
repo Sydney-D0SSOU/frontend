@@ -85,16 +85,12 @@ export default {
             this.offOthers(list, choosed)
             const optionsJSON = JSON.stringify(this.options);
             const allComptesJSON = JSON.stringify(this.allComptes)
-            localStorage.setItem('options{Rp}', optionsJSON);
-            localStorage.setItem('allComptes{Rp}', allComptesJSON);
+          
             this.$router.push(`${objetfind.path}`);
         },
         Deconnect() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('memberInfo');
-            localStorage.removeItem('options{Rp}');
-            localStorage.removeItem('allComptes{Rp}');
-            this.$router.push(`/`);
+            localStorage.clear();
+            this.$router.push('/')
         },
         resetOptionBarreNav(list, currentPath) {
             // console.log(`In reset !!!`)

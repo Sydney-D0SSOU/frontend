@@ -1,60 +1,110 @@
 <template>
-    <div  id="page">
-        <Nav/>
-        <h1>Bienvenue Banque {{ memberInfo.designation }}</h1>
-        <button id="see-InfoUsers" @click="seeInfoUsers">Voir les infos des utilisateurs</button>
+    <div id="page">
+      <Nav class="nav-button"/>
+      <h1>Bienvenue Mr/Mme {{ username }} </h1> <br/>
+      <h1> N*1373892429748</h1>
+      <div class="card-container">
+        <div class="card">
+          <h2>Liste des contrats de prêt</h2>
+          <p>Rechercher et afficher les contrats de prêt</p>
+          <button id="register-acte" @click="registerContrat">Voir</button>
+        </div>
+        <div class="card">
+        <h2>Enregistrer un contrat de prêt</h2>
+        <p>Vous êtes prêt à enregistrer un nouveau contrat de prêt?</p>
+        <button id="register-acte" @click="registerActe">Enregistrer</button>
+      </div>
+      </div>
     </div>
-   
-</template>
-
-<script>
-import NoAccess from './AccessDenied.vue';
-import Nav from './BarreNav.vue';
-import {authBanque} from '../auth.js';
-export default {
-    mixins: [authBanque],
-    components: {
-        Nav, NoAccess
+  </template>
+  
+  <script>
+  import Nav from './BarreNav.vue';
+  import { useUserStore } from '@/store/store.js';
+  import { computed } from 'vue';
+  import { useRouter } from 'vue-router'; // Importez useRouter depuis Vue Router
+  
+  export default {
+    components: { Nav },
+    setup() {
+      const store = useUserStore();
+      const router = useRouter(); // Initialisez useRouter
+      const username = computed(() => store.user ? store.user.nom : null);
+  
+      const registerActe = () => {
+      router.push('/acteP');
+    };
+  
+      const registerContrat = () => {
+        router.push('/listContrat');
+      };
+  
+      return {
+        username,
+        registerActe,
+        registerContrat,
+      };
     },
-    data() {
-        return {
-            memberInfo: {}
-        }
-    },
-    created() {
-        const infos = JSON.parse(localStorage.getItem('memberInfo'));
-        if (infos) this.memberInfo = infos;
-        else this.memberInfo = ''
-    },
-    methods: {
-        seeInfoUsers() {
-        },
-    },
-    mounted() {
-        document.title = "Institution financiere"; // Mettez le titre que vous souhaitez afficher
-    }
-}
-</script>
-
-<style scoped>
-#nav {
-    position: absolute;
-}
-    button {
-        background-color: rgb(0, 0, 0);
-        color:rgb(255, 255, 255)
-    }
-    button:hover {
-        background-color: rgb(114, 29, 29);
-    }
-    #rFront {
-        position: absolute;
-        top: 70px;
-        left: 1680px;
-    }
-    #rPersAsser {
-        position: absolute;
-        top: 37px;
-        left: 1228px;
-    }
-</style>
+  };
+  </script>
+  
+  <style>
+  #page {
+    background-color: #f4f4f4;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .card-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    margin-top: 50px;
+    width: 80%;
+  }
+  
+  .card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    width: 45%; /* Réduire la largeur pour que les cartes soient côte à côte */
+    text-align: center;
+  }
+  
+  .card h2 {
+    color: #333;
+  }
+  
+  .card p {
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  button {
+    background-color: #8B4513; /* Marron */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease; /* Animation de transition */
+  }
+  
+  button:hover {
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3); /* Ombre au survol */
+  }
+  
+  /* Annulation du style pour le bouton "Se connecter" */
+  .nav-button {
+    background-color: inherit;
+    color: inherit;
+    margin: inherit;
+    border-radius: inherit;
+    transition: inherit;
+  }
+  </style>
+  

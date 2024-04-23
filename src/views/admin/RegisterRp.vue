@@ -3,7 +3,7 @@
     <form class="form" @submit.prevent="submitForm">
       <img src="../../assets/addcmp.png" alt="Image de formulaire" class="form-image">
       <p id="ajout_compte">Ajouter compte </p>
-      <p id="Nature-compte">[Une Reprensant pays]</p>
+      <p id="Nature-compte">[Un Représentant pays]</p>
       <input id="Designation" type="text" v-model="formData.nom" placeholder="Nom Reprensant pays:" @input="clearError" required>
       <input id="IFU" type="text" v-model="formData.ifu" placeholder="IFU:" @input="clearError" required>
       <input id="paswrd" type="text" v-model="formData.tel" placeholder="Téléphone:" @input="clearError" required>
@@ -12,14 +12,14 @@
       <br>
       <div id="dirigeant">
         <input id="dir_name" type="text" v-model="formData.profession" placeholder="Profession:" @input="clearError" required>
-        <input id="dir_Contact" type="text" v-model="formData.email" placeholder="Adresse email:" @input="clearError" required>
+        <input id="dir_Contact" type="email" v-model="formData.email" placeholder="Adresse email:" @input="clearError" required>
       </div>
       <button id="gen_btm" type="button" @click="generateUserCode(8)">Generer</button>
       <input id="user_code_id" type="text" v-model="formData.password" placeholder="mot de passe:" @input="clearError" required>
       <h6 class="msgerr" v-if="ifuError">{{ ifuError }}</h6>
       <h6 class="msgerr" v-if="nipError">{{ nipError }}</h6>
       <h6 class="msgerr" v-if="badcode">8 caractere requis pour le code !</h6>
-      <h6 class="msgerr" v-if="badinfo">Informations invalides !</h6>
+      <h6 class="msgerr" v-if="badinfo">{{ errorMessage }}</h6>
       <h6 id="ok-msg" v-if="success">Inscription réussie !</h6>
       <button id="log" type="submit">Inscrire</button>
     </form>
@@ -28,6 +28,7 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
   name: 'RegisterVue',
@@ -37,20 +38,41 @@ export default {
         nom: '', 
         prenoms: '',
         ifu: '',
-        nip: 0, 
+        nip: '', 
         profession: '',
         email: '', 
         password: '', 
-        tel: 0,
+        tel: '',
       },
       nipError:'',
       ifuError:'',
       badinfo: false, 
       success: false, 
       badcode: false, 
+      errorMessage: '',
     };
   },
   methods: {
+    alertDisplay(message) {
+      this.$swal({
+        title: 'Oops',
+        text: message,
+        icon: 'error',
+        iconColor: 'red',
+        confirmButtonText: 'OK',
+        confirmButtonColor:'brown'
+      });
+    },
+    alertSuccess(message) {
+      this.$swal({
+        title: 'Bien',
+        text: message,
+        icon: 'success',
+        iconColor: 'green',
+        confirmButtonText: 'OK',
+        confirmButtonColor:'green'
+      });
+    },
     generateUserCode(length) {
       const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
       let code = '';
@@ -59,56 +81,48 @@ export default {
         code += charset[randomIndex];
       }
       this.formData.password = code;
-    },
+    },               
     submitForm() {
-  if (this.formData.ifu.toString().length !== 12) {
-    this.ifuError = "L'IFU doit contenir exactement 12 chiffres.";
-    return;
-  }
-  if (this.formData.nip.toString().length !== 9) {
-    this.nipError = "Le NIP doit contenir exactement 9 chiffres ";
-    return;
-  }
+      // Validation des champs IFU et NIP
+      if (this.formData.ifu.toString().length !== 12) {
+        this.alertDisplay("L'IFU doit contenir exactement 12 chiffres.");
+        return;
+      }
+      if (this.formData.nip.toString().length !==9) {
+        this.alertDisplay("Le NIP doit contenir exactement 10 chiffres.");
+        return;
+      }
+      this.formData.nip = parseInt(this.formData.nip);
+      this.formData.tel = parseInt(this.formData.tel);
+      const x = this.formData
+ console.log (JSON.stringify(x))
+      // Envoi des données du formulaire à l'API
+      const token = localStorage.getItem("token");
 
-  const formDataJson = JSON.stringify(this.formData); // Convertir l'objet en JSON
-
-  console.log('Données du formulaire envoyées à l\'API :', formDataJson,this.formData); 
-  // Afficher les données JSON dans la console
-  this.formData.nip = parseInt(this.formData.nip);
-  this.formData.tel = parseInt(this.formData.tel);
-
-  axios.post('http://localhost:8000/api/register-admin-pays', this.formData, { 
-    headers: {
-      'Content-Type': 'application/json'
+      axios.post('http://localhost:8000/api/register/admin-pays', x)
+      .then(() => {
+        this.success = true;
+        this.alertSuccess("Utilisateur enregistré avec succès");
+        // Réinitialisation des variables du formulaire
+        this.formData = {
+          nom: '', 
+          prenoms: '',
+          ifu: '',
+          nip: '', 
+          profession: '',
+          email: '', 
+          password: '', 
+          tel: '',
+        };
+      })
+      .catch((err) => {
+        console.error(err);
+        this.badinfo = true;
+        this.errorMessage = "Une erreur est survenue lors de l'inscription.";
+        this.alertDisplay("Une erreur est survenue lors de l'inscription.");
+      });
     },
-  })
-  .then(() => {
-    this.success = true;
-      setTimeout(() => {
-        this.success = false;
-      }, 2000);
-       // reinitialisation des variables
-    this.formData.nom =''; 
-    this.formData.prenoms='';
-    this.formData.ifu ='';
-    this.formData.nip =''; 
-    this.formData.profession ='';
-    this.formData.email=''; 
-    this.formData.password='';
-    this.formData.tel='';
-   })
-  .catch((err) => {
-    console.error(err);
-   
-    this.badinfo = true;
-  });
-},
-
-
-    clearError() {
-      this.badinfo = false;
-      this.badcode = false;
-    }
+    
   },
 };
 </script>

@@ -12,14 +12,14 @@
       <br>
       <div id="dirigeant">
         <input id="dir_name" type="text" v-model="formData.profession" placeholder="Profession:" @input="clearError" required>
-        <input id="dir_Contact" type="text" v-model="formData.email" placeholder="Adresse email:" @input="clearError" required>
+        <input id="dir_Contact" type="email" v-model="formData.email" placeholder="Adresse email:" @input="clearError" required>
       </div>
       <button id="gen_btm" type="button" @click="generateUserCode(8)">Generer</button>
       <input id="user_code_id" type="text" v-model="formData.password" placeholder="mot de passe:" @input="clearError" required>
       <h6 class="msgerr" v-if="ifuError">{{ ifuError }}</h6>
       <h6 class="msgerr" v-if="nipError">{{ nipError }}</h6>
-      <h6 class="msgerr" v-if="badcode">8 caractere requis pour le code !</h6>
-      <h6 class="msgerr" v-if="badinfo">Informations invalides !</h6>
+      <h6 class="msgerr" v-if="badcode">8 caractères requis pour le code !</h6>
+      <h6 class="msgerr" v-if="badinfo">{{ errorMessage }}</h6>
       <h6 id="ok-msg" v-if="success">Inscription réussie !</h6>
       <button id="log" type="submit">Inscrire</button>
     </form>
@@ -28,27 +28,40 @@
 
 <script>
 import axios from 'axios';
+import Swal from 'sweetalert2';
+import { useUserStore } from '@/store/store.js';
+import { computed } from 'vue';
 
 export default {
   name: 'RegisterVue',
+  setup() {
+    const store = useUserStore(); // Utiliser useUserStore pour accéder au store
+    const admin_pays_id = computed(() => store.user.admin_pays.id);
+
+    return {
+      store,
+      admin_pays_id
+    };
+  },
   data() {
     return {
       formData: {
         nom: '', 
         prenoms: '',
         ifu: '',
-        nip: 0, 
+        nip: '', 
         profession: '',
         email: '', 
         password: '', 
-        tel: 0,
-        admin_pays_id: localStorage.getItem('connectId2')
+        tel: '',
+        admin_pays_id:''
       },
       nipError:'',
       ifuError:'',
       badinfo: false, 
       success: false, 
       badcode: false, 
+      errorMessage: ''
     };
   },
   methods: {
@@ -62,55 +75,73 @@ export default {
       this.formData.password = code;
     },
     submitForm() {
-  if (this.formData.ifu.toString().length !== 12) {
-    this.ifuError = "L'IFU doit contenir exactement 12 chiffres.";
-    return;
-  }
-  if (this.formData.nip.toString().length !== 9) {
-    this.nipError = "Le NIP doit contenir exactement 9 chiffre ";
-    return;
-  }
+      if (this.formData.ifu.toString().length !== 12) {
+        this.alertError("Le numéro IFU doit contenir exactement 12 chiffres.");
+        return;
+      }
+      if (this.formData.nip.toString().length !== 9) {
+        this.alertError("Le NIP doit contenir exactement 9 chiffres.");
+        return;
+      }
 
-  const formDataJson = JSON.stringify(this.formData); // Convertir l'objet en JSON
+      this.formData.nip = parseInt(this.formData.nip);
+      this.formData.tel = parseInt(this.formData.tel);
+      const userStore = useUserStore();
+      const user = userStore.user;
+      this.formData.admin_pays_id = user.admin_pays.id
+      const x = this.formData
+ console.log (JSON.stringify(x))
 
-  console.log('Données du formulaire envoyées à l\'API :', formDataJson,this.formData); 
-  // Afficher les données JSON dans la console
-  this.formData.nip = parseInt(this.formData.nip);
-  this.formData.tel = parseInt(this.formData.tel);
-
-  axios.post('http://localhost:8000/api/register-front-office', this.formData, { 
-    headers: {
-      'Content-Type': 'application/json'
+      axios.post('http://localhost:8000/api/register/front-office', x)
+      .then(() => {
+        this.success = true;
+        this.alertSuccess("Inscription réussie !");
+        setTimeout(() => {
+          this.success = false;
+        }, 2000);
+        // Réinitialisation des champs du formulaire
+        this.clearForm();
+      })
+      .catch((err) => {
+        console.error(err);
+        this.badinfo = true;
+        this.errorMessage = "Informations invalides / Front office existant.";
+        this.alertError("Informations invalides / Front office existant.");
+      });
     },
-  })
-  .then(() => {
-    this.success = true;
-      setTimeout(() => {
-        this.success = false;
-      }, 2000);
-       // reinitialisation des variables
-    this.formData.nom =''; 
-    this.formData.prenoms='';
-    this.formData.ifu ='';
-    this.formData.nip =''; 
-    this.formData.profession ='';
-    this.formData.email=''; 
-    this.formData.password='';
-    this.formData.tel='';
-   })
-  .catch((err) => {
-    console.error(err);
-   
-    this.badinfo = true;
-  });
-},
-
-
     clearError() {
+      this.nipError = '';
+      this.ifuError = '';
       this.badinfo = false;
-      this.badcode = false;
+    },
+    alertError(message) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: message
+      });
+    },
+    alertSuccess(message) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Succès',
+        text: message
+      });
+    },
+    clearForm() {
+      this.formData = {
+        nom: '', 
+        prenoms: '',
+        ifu: '',
+        nip: '', 
+        profession: '',
+        email: '', 
+        password: '', 
+        tel: '',
+        admin_pays_id : '' 
+      };
     }
-  },
+  }
 };
 </script>
 

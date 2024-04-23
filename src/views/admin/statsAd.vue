@@ -5,7 +5,7 @@
           <Nav/>
         </div>
         <div class="col-10">
-          <listPA/>
+          <charts/>
         </div>
       </div>
     </div>
@@ -13,12 +13,12 @@
   
     
     <script scoped>
-    import Nav from './NavFO.vue';
-    import listPA from '@/components/list/listPA.vue';
+    import Nav from './NavAdmin.vue';
+    import charts from '@/components/stats/charts.vue';
     export default {
       components: {
           Nav,
-          listPA
+          charts
       },
     }
     

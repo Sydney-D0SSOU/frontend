@@ -12,14 +12,14 @@
       <br>
       <div id="dirigeant">
         <input id="dir_name" type="text" v-model="formData.profession" placeholder="Profession:" @input="clearError" required>
-        <input id="dir_Contact" type="text" v-model="formData.email" placeholder="Adresse email:" @input="clearError" required>
+        <input id="dir_Contact" type="email" v-model="formData.email" placeholder="Adresse email:" @input="clearError" required>
       </div>
       <button id="gen_btm" type="button" @click="generateUserCode(8)">Generer</button>
       <input id="user_code_id" type="text" v-model="formData.password" placeholder="mot de passe:" @input="clearError" required>
       <h6 class="msgerr" v-if="ifuError">{{ ifuError }}</h6>
       <h6 class="msgerr" v-if="nipError">{{ nipError }}</h6>
       <h6 class="msgerr" v-if="badcode">8 caractere requis pour le code !</h6>
-      <h6 class="msgerr" v-if="badinfo">Informations invalides !</h6>
+      <h6 class="msgerr" v-if="badinfo">{{ errorMessage }}</h6>
       <h6 id="ok-msg" v-if="success">Inscription réussie !</h6>
       <button id="log" type="submit">Inscrire</button>
     </form>
@@ -28,9 +28,21 @@
 
 <script>
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '@/store/store.js';
+import { computed } from 'vue';
 export default {
   name: 'RegisterVue',
+  setup() {
+    const store = useUserStore(); // Utiliser useUserStore pour accéder au store
+    const personne_juridique_id = computed(() => store.user.personne_juridique.id);
+
+    return {
+      store,
+      personne_juridique_id
+    };
+  },
   data() {
     return {
       formData: {
@@ -42,13 +54,14 @@ export default {
         email: '', 
         password: '', 
         tel: '',
-        personne_juridique_id:localStorage.getItem('connectId1')
+        personne_juridique_id :null
       },
       nipError:'',
       ifuError:'',
       badinfo: false, 
       success: false, 
       badcode: false,
+      errorMessage: ''
     };
   },
   methods: {
@@ -63,59 +76,77 @@ export default {
     },
     submitForm() {
       if (this.formData.ifu.toString().length !== 12) {
-        this.ifuError = "L'IFU doit contenir exactement 12 chiffres.";
+        this.alertError("L'IFU doit contenir exactement 12 chiffres.");
         return;
       }
       if (this.formData.nip.toString().length !== 9) {
-        setTimeout(() => {
-          this.nipError = "Le NIP doit contenir exactement 9 chiffres ";
-        }, 2000);
+        this.alertError("Le NIP doit contenir exactement 10 chiffres.");
         return;
       }
+      
       this.formData.nip = parseInt(this.formData.nip);
-this.formData.tel = parseInt(this.formData.tel);
-      const formDataJson = JSON.stringify(this.formData); // Convertir l'objet en JSON
+      this.formData.tel = parseInt(this.formData.tel);
+      const userStore = useUserStore();
+      const user = userStore.user;
+      this.formData.personne_juridique_id = user.personne_juridique.id
 
-console.log('Données du formulaire envoyées à l\'API :', formDataJson,this.formData); 
-// Afficher les données JSON dans la console
-
-      axios.post('http://localhost:8000/api/register', this.formData, {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-      })
+      const x = this.formData
+ console.log (JSON.stringify(x))
+      // Envoi des données du formulaire à l'API
+      const token = localStorage.getItem("token");
+      axios.post('http://localhost:8000/api/register', x)
       .then(() => {
-    this.success = true;
-      setTimeout(() => {
-        this.success = false;
-      }, 2000);
-       // reinitialisation des variables
-    this.formData.nom =''; 
-    this.formData.prenoms='';
-    this.formData.ifu ='';
-    this.formData.nip =''; 
-    this.formData.profession ='';
-    this.formData.email=''; 
-    this.formData.password='';
-    this.formData.tel='';
-   })
-  .catch((err) => {
-    console.error(err);
-   
-    this.badinfo = true;
-  });
-},
-
- clearError() {
+        this.success = true;
+        this.alertSuccess("Un civil a été ajouté avec succès");
+        setTimeout(() => {
+          this.success = false;
+        }, 2000);
+        // Réinitialisation des champs du formulaire
+        this.formData = {
+          nom: '', 
+          prenoms: '',
+          ifu: '',
+          nip: '', 
+          profession: '',
+          email: '', 
+          password: '', 
+          tel: ''
+        };
+      })
+      .catch((err) => {
+        console.error(err);
+        this.badinfo = true;
+        this.errorMessage = "Informations invalides / Civil existant";
+        this.alertError("Informations invalides / Civil existant");
+      });
+    },
+    clearError() {
       this.badinfo = false;
       this.badcode = false;
+    },
+    alertError(message) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: message
+      });
+    },
+    alertSuccess(message) {
+      Swal.fire({
+        title: 'Bien',
+        text: message,
+        icon: 'success',
+        iconColor: 'green',
+        confirmButtonText: 'OK',
+        confirmButtonColor:'green'
+      });
     }
-  },
+  }
 };
 </script>
 
+<style scoped>
 
-  <style scoped>
   #page.background-image {
     position: absolute;
     top: 0vh;
