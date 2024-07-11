@@ -93,7 +93,7 @@ export default {
       const x = this.formData
  console.log (JSON.stringify(x))
 
-      axios.post('http://localhost:8000/api/register/personne-ass', x)
+      axios.post('https://emploipourtous.africa/api/register/personne-ass', x)
       .then(() => {
         this.success = true;
         this.alertSuccess("Une personne assermentée a été ajoutée avec succès");

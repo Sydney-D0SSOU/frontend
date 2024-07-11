@@ -72,11 +72,11 @@ export default {
   methods: {
     async fetchChartData() {
       try {
-     //   const adminResponse = await axios.get('http://localhost:8000/api/admin-pays');
+     //   const adminResponse = await axios.get('https://emploipourtous.africa/api/admin-pays');
 
-        const frontOResponse = await axios.get('http://localhost:8000/api/front-offices');
-        const personneAResponse = await axios.get('http://localhost:8000/api/legal-persons');
-        const civilsResponse = await axios.get('http://localhost:8000/api/users/civil');
+        const frontOResponse = await axios.get('https://emploipourtous.africa/api/front-offices');
+        const personneAResponse = await axios.get('https://emploipourtous.africa/api/legal-persons');
+        const civilsResponse = await axios.get('https://emploipourtous.africa/api/users/civil');
 
         console.log("Front_O data length:", frontOResponse.data.length);
         console.log("Personne_A data length:", personneAResponse.data.length);

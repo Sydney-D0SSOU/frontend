@@ -2,17 +2,17 @@
 import Nav from '../BarreNav.vue';
 import { useUserStore } from '@/store/store.js';
 import { computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router'; // Importez useRouter depuis Vue Router
+import { useRouter } from 'vue-router';
 
 export default {
   components: { Nav },
   setup() {
     const store = useUserStore();
-    const router = useRouter(); // Initialisez useRouter
+    const router = useRouter();
     const username = computed(() => store.user ? store.user.nom : null);
 
     const registerUser = () => {
-      router.push('/inscription-user'); // Utilisez router.push pour naviguer
+      router.push('/inscription-user');
     };
 
     const registerActe = () => {
@@ -62,7 +62,6 @@ export default {
         <p>Envie de rejoindre notre communauté? Inscrivez-vous dès maintenant!</p>
         <button id="register-user" @click="registerUser">Inscrire</button>
       </div>
-      
     </div>
   </div>
 </template>
@@ -90,8 +89,11 @@ export default {
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   width: 30%;
-  margin-left : 10px;
+  margin-left: 10px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .card h2 {
@@ -118,7 +120,6 @@ button:hover {
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3); /* Ombre au survol */
 }
 
-/* Annulation du style pour le bouton "Se connecter" */
 .nav-button {
   background-color: inherit;
   color: inherit;
@@ -126,15 +127,16 @@ button:hover {
   border-radius: inherit;
   transition: inherit;
 }
-.card {
-  /* Autres styles... */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
 
-.card button {
-  margin-top: auto; /* Pour aligner le bouton en bas de la carte */
-}
+@media (max-width: 768px) {
+  .card-container {
+    flex-direction: column;
+    align-items: center;
+  }
 
+  .card {
+    width: 80%;
+    margin: 10px 0;
+  }
+}
 </style>

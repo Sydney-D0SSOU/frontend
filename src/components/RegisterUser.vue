@@ -2,7 +2,7 @@
   <div id="page" class="background-image">
     <form class="form" @submit.prevent="submitForm">
       <img src="../assets/addcmp.png" alt="Image de formulaire" class="form-image">
-      <p id="ajout_compte">Ajouter compte </p>
+      <p id="ajout_compte">Ajouter compte</p>
       <p id="Nature-compte">[Un Civil]</p>
       <input id="Designation" type="text" v-model="formData.nom" placeholder="Nom du civil:" @input="clearError" required>
       <input id="IFU" type="text" v-model="formData.ifu" placeholder="IFU:" @input="clearError" required>
@@ -15,10 +15,10 @@
         <input id="dir_Contact" type="email" v-model="formData.email" placeholder="Adresse email:" @input="clearError" required>
       </div>
       <button id="gen_btm" type="button" @click="generateUserCode(8)">Generer</button>
-      <input id="user_code_id" type="text" v-model="formData.password" placeholder="mot de passe:" @input="clearError" required>
+      <input id="user_code_id" type="text" v-model="formData.password" placeholder="Mot de passe:" @input="clearError" required>
       <h6 class="msgerr" v-if="ifuError">{{ ifuError }}</h6>
       <h6 class="msgerr" v-if="nipError">{{ nipError }}</h6>
-      <h6 class="msgerr" v-if="badcode">8 caractere requis pour le code !</h6>
+      <h6 class="msgerr" v-if="badcode">8 caractères requis pour le code !</h6>
       <h6 class="msgerr" v-if="badinfo">{{ errorMessage }}</h6>
       <h6 id="ok-msg" v-if="success">Inscription réussie !</h6>
       <button id="log" type="submit">Inscrire</button>
@@ -32,11 +32,12 @@ import Swal from 'sweetalert2';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/store.js';
 import { computed } from 'vue';
+
 export default {
   name: 'RegisterVue',
   setup() {
     const store = useUserStore(); // Utiliser useUserStore pour accéder au store
-    const personne_juridique_id = computed(() => store.user.personne_juridique.id);
+    const personne_juridique_id = computed(() => store.user.personne_juridique?.id);
 
     return {
       store,
@@ -54,10 +55,10 @@ export default {
         email: '', 
         password: '', 
         tel: '',
-        personne_juridique_id :null
+        personne_juridique_id: null
       },
-      nipError:'',
-      ifuError:'',
+      nipError: '',
+      ifuError: '',
       badinfo: false, 
       success: false, 
       badcode: false,
@@ -79,22 +80,22 @@ export default {
         this.alertError("L'IFU doit contenir exactement 12 chiffres.");
         return;
       }
-      if (this.formData.nip.toString().length !== 9) {
-        this.alertError("Le NIP doit contenir exactement 10 chiffres.");
+      if (this.formData.nip.toString().length !== 8) {
+        this.alertError("Le NIP doit contenir exactement 8 chiffres.");
         return;
       }
-      
+
       this.formData.nip = parseInt(this.formData.nip);
       this.formData.tel = parseInt(this.formData.tel);
       const userStore = useUserStore();
       const user = userStore.user;
-      this.formData.personne_juridique_id = user.personne_juridique.id
+      this.formData.personne_juridique_id = user?.personne_juridique?.id;
 
-      const x = this.formData
- console.log (JSON.stringify(x))
-      // Envoi des données du formulaire à l'API
-      const token = localStorage.getItem("token");
-      axios.post('http://localhost:8000/api/register', x)
+      axios.post('https://emploipourtous.africa/api/register', this.formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
       .then(() => {
         this.success = true;
         this.alertSuccess("Un civil a été ajouté avec succès");
@@ -110,14 +111,14 @@ export default {
           profession: '',
           email: '', 
           password: '', 
-          tel: ''
+          tel: '',
+          personne_juridique_id: null
         };
       })
       .catch((err) => {
         console.error(err);
-        this.badinfo = true;
-        this.errorMessage = "Informations invalides / Civil existant";
-        this.alertError("Informations invalides / Civil existant");
+        const errorMessage = err.response?.data?.message || "Informations invalides / Civil existant";
+        this.alertError(errorMessage);
       });
     },
     clearError() {
@@ -138,7 +139,7 @@ export default {
         icon: 'success',
         iconColor: 'green',
         confirmButtonText: 'OK',
-        confirmButtonColor:'green'
+        confirmButtonColor: 'green'
       });
     }
   }
@@ -146,185 +147,186 @@ export default {
 </script>
 
 <style scoped>
+#page.background-image {
+  position: absolute;
+  top: 0vh;
+  left: 0vw;
+  background-image: url('../assets/2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100vw;
+}
 
-  #page.background-image {
-    position: absolute;
-    top: 0vh;
-    left: 0vw;
-    background-image: url('../assets/2.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat:no-repeat;
-    height: 100vh;
-    width: 100vw;
-  }
-  .form-image {
-    width: 70px;
-    height: 70px;
+.form-image {
+  width: 70px;
+  height: 70px;
   margin-right: 20px;
-  }
+}
 
-  #ajout_compte{
-    position: absolute;
-    top: 20px;
-    left: 130px;
-    font-size: xxx-large;
-    font-weight: 900;
-    color: rgb(90, 2, 90);
-  }
+#ajout_compte {
+  position: absolute;
+  top: 20px;
+  left: 130px;
+  font-size: xxx-large;
+  font-weight: 900;
+  color: rgb(90, 2, 90);
+}
 
-  #Nature-compte {
-    position: absolute;
-    top: 90px;
-    left: 230px;
-    font-size: 20px;
-    font-weight: 900;
-    color: rgb(90, 2, 90);
-  }
+#Nature-compte {
+  position: absolute;
+  top: 90px;
+  left: 230px;
+  font-size: 20px;
+  font-weight: 900;
+  color: rgb(90, 2, 90);
+}
 
-  #Designation {
-    position: absolute;
-    top: 170px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
+#Designation {
+  position: absolute;
+  top: 170px;
+  left: 70px;
+  width: 500px;
+  border-radius: 50px;
+  height: 45px;
+}
 
-  #IFU{
-    position: absolute;
-    top: 290px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
+#IFU {
+  position: absolute;
+  top: 290px;
+  left: 70px;
+  width: 500px;
+  border-radius: 50px;
+  height: 45px;
+}
 
-  #adresse {
-    position: absolute;
-    top: 230px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  } 
+#adresse {
+  position: absolute;
+  top: 230px;
+  left: 70px;
+  width: 500px;
+  border-radius: 50px;
+  height: 45px;
+}
 
-  #paswrd {
-    position: absolute;
-    top: 350px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
+#paswrd {
+  position: absolute;
+  top: 350px;
+  left: 70px;
+  width: 500px;
+  border-radius: 50px;
+  height: 45px;
+}
 
-  #Contact {
-    position: absolute;
-    top: 410px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
+#Contact {
+  position: absolute;
+  top: 410px;
+  left: 70px;
+  width: 500px;
+  border-radius: 50px;
+  height: 45px;
+}
 
-  #dir_name {
-    position: absolute;
-    top: 170px;
-    left: 800px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
+#dir_name {
+  position: absolute;
+  top: 170px;
+  left: 800px;
+  width: 500px;
+  border-radius: 50px;
+  height: 45px;
+}
 
-  #dir_Contact{
-    position: absolute;
-    top: 230px;
-    left: 800px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
+#dir_Contact {
+  position: absolute;
+  top: 230px;
+  left: 800px;
+  width: 500px;
+  border-radius: 50px;
+  height: 45px;
+}
 
-  #gen_btm{
-    position: absolute;
-    top: 350px;
-    left: 800px;
-    width: 100px;
-    background-color: rgb(73, 6, 73);
-    border-radius: 50px;
-  }
+#gen_btm {
+  position: absolute;
+  top: 350px;
+  left: 800px;
+  width: 100px;
+  background-color: rgb(73, 6, 73);
+  border-radius: 50px;
+}
 
-  #gen_btm:hover {
-    background-color: maroon;
-  }
+#gen_btm:hover {
+  background-color: maroon;
+}
 
-  #user_code_id {
-    position: absolute;
-    top: 395px;
-    left: 800px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
+#user_code_id {
+  position: absolute;
+  top: 395px;
+  left: 800px;
+  width: 500px;
+  border-radius: 50px;
+  height: 45px;
+}
 
-  #ok-msg {
-    color:rgb(48, 177, 1);
-  }
+#ok-msg {
+  color: rgb(48, 177, 1);
+}
 
-  .form {
-      background-color: rgb(255, 255, 255);
-      border: 1px solid #ccc;
-      padding: 2em;
-      border-radius: 50px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      width: 1350px;
-      height: 620px;
-      position: absolute;
-      top:  50px;
-      left: 240px;
-      margin: 0;
-    }
+.form {
+  background-color: rgb(255, 255, 255);
+  border: 1px solid #ccc;
+  padding: 2em;
+  border-radius: 50px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 1350px;
+  height: 620px;
+  position: absolute;
+  top: 50px;
+  left: 240px;
+  margin: 0;
+}
 
-  input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 
-  #log {
-    position: absolute;
-    top: 560px;
-    left: 510px;
-    width: 390px;
-    background-color: rgb(73, 6, 73);
-    border-radius: 50px;
-    height: 45px;
-  }
+#log {
+  position: absolute;
+  top: 560px;
+  left: 510px;
+  width: 390px;
+  background-color: rgb(73, 6, 73);
+  border-radius: 50px;
+  height: 45px;
+}
 
-  #log:hover {
-    background-color: maroon;
-  }
+#log:hover {
+  background-color: maroon;
+}
 
-  button {
-    background-color: #000000;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+button {
+  background-color: #000000;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
-  button:hover {
-    background-color: #821010;
-  }
+button:hover {
+  background-color: #821010;
+}
 
-  .msgerr {
-    color: red;
-    font-size: 10px;
-  }
-  .msgsuccess {
+.msgerr {
+  color: red;
+  font-size: 10px;
+}
+
+.msgsuccess {
   color: green;
 }
-  </style>
+</style>

@@ -124,7 +124,7 @@
       }
     },
     created() {
-  axios.get('http://localhost:8000/api/institutions-financieres')
+  axios.get('https://emploipourtous.africa/api/institutions-financieres')
     .then(response => {
       // Retirer l'objet admin_pays de chaque institution financière
       const institutionsSansAdminPays = response.data.institutions_financieres.map(institution => {

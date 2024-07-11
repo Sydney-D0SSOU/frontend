@@ -99,7 +99,7 @@ export default {
       // Envoi des données du formulaire à l'API
       const token = localStorage.getItem("token");
 
-      axios.post('http://localhost:8000/api/register/admin-pays', x)
+      axios.post('https://emploipourtous.africa/api/register/admin-pays', x)
       .then(() => {
         this.success = true;
         this.alertSuccess("Utilisateur enregistré avec succès");

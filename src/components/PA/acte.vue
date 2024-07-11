@@ -65,7 +65,7 @@ import { computed, onMounted } from 'vue';
         const token = localStorage.getItem("token");
 
         if (searchKey) {
-          axios.post(`http://localhost:8000/api/users/search`, { search_key: searchKey },)
+          axios.post(`https://emploipourtous.africa/api/users/search`, { search_key: searchKey },)
             .then((response) => {
               console.log("Response from search-user API:", response.data);
               if (type === 'creancier') {
@@ -121,7 +121,7 @@ formDataToSend.append("statut", this.formData.statut);
     console.log(token)
  console.log (JSON.stringify(formDataToSend))
     // Effectuer la requête POST vers le backend
-    axios.post('http://localhost:8000/api/actes-de-prets', formDataToSend )
+    axios.post('https://emploipourtous.africa/api/actes-de-prets', formDataToSend )
       .then((response) => {
         console.log(response);
         this.alertSuccess("Le contrat a été ajouté avec succès");

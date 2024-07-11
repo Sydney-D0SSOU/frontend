@@ -92,7 +92,7 @@ export default {
       const x = this.formData
  console.log (JSON.stringify(x))
 
-      axios.post('http://localhost:8000/api/register/institution-financiere', x)
+      axios.post('https://emploipourtous.africa/api/register/institution-financiere', x)
       .then(() => {
         this.success = true;
         this.alertSuccess("Inscription réussie !");

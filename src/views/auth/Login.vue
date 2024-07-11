@@ -68,7 +68,7 @@ export default {
       }
 
       try {
-        const response = await axios.post('http://localhost:8000/api/login', {
+        const response = await axios.post('https://emploipourtous.africa/api/login', {
           unique_id: this.formData.unique,
           password: this.formData.password
         });
@@ -97,6 +97,12 @@ export default {
           this.$router.push('/banque'); // Utilisez $router au lieu de router
         
         }
+        /*else if (user.admin) {
+          userStore.setUser(response.data.user);
+          this.alertSuccess()
+          this.$router.push('/admin'); // Utilisez $router au lieu de router
+        
+        }*/
 
         const token = response.data.token;
         localStorage.setItem('token', token);

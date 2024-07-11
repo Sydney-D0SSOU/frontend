@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get('http://localhost:8000/api/actes-de-prets')
+      axios.get('https://emploipourtous.africa/api/actes-de-prets')
         .then(response => {
           this.actesDePrets = response.data.actes_de_pret;
           this.allActesDePrets = response.data.actes_de_pret;
@@ -63,7 +63,7 @@ export default {
     },
     searchContracts() {
       if (this.searchTerm !== '') {
-        axios.get(`http://localhost:8000/api/actes-de-pret/user/${this.searchTerm}`)
+        axios.get(`https://emploipourtous.africa/api/actes-de-pret/user/${this.searchTerm}`)
           .then(response => {
             this.searchResults = response.data.actes_de_pret;
           })
@@ -77,7 +77,7 @@ export default {
         this.searchResults = [];
       }
       if (this.searchTerm !== '') {
-          axios.post(`http://localhost:8000/api/sms/search-and-send`, { search_key: this.searchTerm },)
+          axios.post(`https://emploipourtous.africa/api/sms/search-and-send`, { search_key: this.searchTerm },)
             .then((response) => {
               console.log('code déjà envoyer');
              
@@ -111,7 +111,7 @@ export default {
       formData.append('sms_code', smsCode);
 
       // Envoyer le FormData à l'API pour vérification
-      return axios.post('http://localhost:8000/api/verify-sms', formData)
+      return axios.post('https://emploipourtous.africa/api/verify-sms', formData)
         .then(() => {
           // Traiter la réponse de l'API si nécessaire
           this.$router.push(`/actes-de-prets/${acte.id}`);

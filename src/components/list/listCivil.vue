@@ -129,7 +129,7 @@
       }
     },
     created() {
-    axios.get('http://localhost:8000/api/users/civil')
+    axios.get('https://emploipourtous.africa/api/users/civil')
       .then(response => {
         this.allComptes = response.data; // Mettre à jour allComptes avec les données récupérées
       })

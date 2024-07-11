@@ -124,7 +124,7 @@
       }
     },
     created() {
-    axios.get('http://localhost:8000/api/legal-persons')
+    axios.get('https://emploipourtous.africa/api/legal-persons')
       .then(response => {
         this.allComptes = response.data; // Mettre à jour allComptes avec les données récupérées
       })

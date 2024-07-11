@@ -42,7 +42,7 @@ export default {
   methods: {
     fetchActe() {
       const id = this.$route.params.id;
-      axios.get(`http://localhost:8000/api/actes-de-prets/${id}`)
+      axios.get(`https://emploipourtous.africa/api/actes-de-prets/${id}`)
         .then(response => {
           this.acte = response.data.acte_de_pret;
         })
@@ -84,7 +84,7 @@ export default {
       // Affichage de l'objet JSON dans la console
       console.log(JSON.stringify(formDataToSend));
 
-      axios.post('http://localhost:8000/api/remboursements', formDataToSend)
+      axios.post('https://emploipourtous.africa/api/remboursements', formDataToSend)
         .then(response => {
           this.handleSuccessResponse(response.data);
         })

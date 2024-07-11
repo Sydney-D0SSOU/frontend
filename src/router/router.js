@@ -48,7 +48,7 @@ const routes = [
   { path: '/connexion', component: Connexion },
   { path: '/authorization-denied-user', component: A401_user},
   
-  { path: '/admin', component: Admin},
+  { path: '/admin', component: statAd},
   { path: '/inscription-frontOffice', component: InscriptionFront},
   { path: '/inscription-persAsser', component: InscriptionPersAsser},
   { path: '/inscription-banque', component: InscriptionBank },

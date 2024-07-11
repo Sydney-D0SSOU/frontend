@@ -126,7 +126,7 @@ seeInfoUser(unique_id) {
       }
     },
     created() {
-    axios.get('http://localhost:8000/api/admin-pays')
+    axios.get('https://emploipourtous.africa/api/admin-pays')
       .then(response => {
         this.allComptes = response.data.admin_pays; // Mettre à jour allComptes avec les données récupérées
       })
