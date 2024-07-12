@@ -97,7 +97,7 @@ export default {
       const user = userStore.user;
       this.formData.personne_juridique_id = user?.personne_juridique?.id;
 
-      axios.post('https://emploipourtous.africa/api/register', this.formData)
+      axios.post('https://emploipourtous.africa/api/register/civil', this.formData)
       .then(() => {
         this.success = true;
         this.alertSuccess("Un civil a été ajouté avec succès");
