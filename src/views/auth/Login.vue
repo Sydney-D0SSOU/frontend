@@ -127,7 +127,7 @@ export default {
 
 <style scoped>
 #one{
-  text-decoration-color: #ffffff;
+  text-decoration-color: #f59c02;
 }
 #main {
   background-image: url(../../assets/img.png);

@@ -10,9 +10,9 @@
           </div>
         </div>
         <input type="text" v-model="formData.nom" placeholder="Nom du civil:" @input="clearError" required>
+        <input type="text" v-model="formData.prenoms" placeholder="Prénom du civil:" @input="clearError" required>
         <input type="text" v-model="formData.ifu" placeholder="IFU:" @input="clearError" required>
         <input type="text" v-model="formData.tel" placeholder="Téléphone:" @input="clearError" required>
-        <input type="text" v-model="formData.prenoms" placeholder="Prenom du civil:" @input="clearError" required>
         <input type="text" v-model="formData.nip" placeholder="Numéro d'identification personnel:" @input="clearError" required>
         <input type="text" v-model="formData.profession" placeholder="Profession:" @input="clearError" required>
         <input type="email" v-model="formData.email" placeholder="Adresse email:" @input="clearError" required>
@@ -97,11 +97,7 @@ export default {
       const user = userStore.user;
       this.formData.personne_juridique_id = user?.personne_juridique?.id;
 
-      axios.post('https://emploipourtous.africa/api/register', this.formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      })
+      axios.post('https://emploipourtous.africa/api/register', this.formData)
       .then(() => {
         this.success = true;
         this.alertSuccess("Un civil a été ajouté avec succès");

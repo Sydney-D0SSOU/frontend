@@ -96,11 +96,7 @@ export default {
         formDataToSend.append(key, this.formData[key]);
       }
 
-      axios.post('https://emploipourtous.africa/api/actes-de-prets', formDataToSend, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
-          }
-        })
+      axios.post('https://emploipourtous.africa/api/actes-de-prets', formDataToSend )
         .then(() => {
           this.alertSuccess("Le contrat a été ajouté avec succès");
           this.resetForm();
