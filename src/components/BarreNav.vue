@@ -12,11 +12,21 @@
             <!-- Utiliser une classe pour le logo et lui appliquer des styles -->
             <img src="../assets/score.png" alt="Logo" class="navbar-logo">
 
-            <!-- Placer le bouton à droite de l'écran -->
+            <!-- Placer les boutons à droite de l'écran -->
             <div class="ml-auto">
+              <!-- Vérifier si le token existe pour afficher le bouton de déconnexion -->
+              <MDBBtn
+                v-if="tokenExists"
+                size="sm"
+                color="dark"
+                class="btn-custom"
+                @click="handleLogout"
+              >
+                Se déconnecter
+              </MDBBtn>
               <!-- Utilisez router-link pour rediriger vers la page de connexion -->
-              <router-link to="/connexion">
-                <MDBBtn size="lg" color="dark" class="btn-custom">Se connecter</MDBBtn>
+              <router-link v-else to="/connexion">
+                <MDBBtn size="sm" color="dark" class="btn-custom">Se connecter</MDBBtn>
               </router-link>
             </div>
           </div>
@@ -29,7 +39,8 @@
 
 <script>
 import { MDBNavbar, MDBNavbarToggler, MDBCollapse, MDBBtn } from 'mdb-vue-ui-kit';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   components: {
@@ -40,7 +51,24 @@ export default {
   },
   setup() {
     const collapse1 = ref(false);
-    return { collapse1 };
+    const tokenExists = ref(false);
+    const router = useRouter();
+
+    const checkToken = () => {
+      tokenExists.value = !!localStorage.getItem('token');
+    };
+
+    const handleLogout = () => {
+      localStorage.removeItem('token');
+      checkToken();
+      router.push('/');
+    };
+
+    onMounted(() => {
+      checkToken();
+    });
+
+    return { collapse1, tokenExists, handleLogout };
   }
 };
 </script>
@@ -52,14 +80,14 @@ export default {
 
 /* Appliquer des styles au logo */
 .navbar-logo {
-  max-width: 200px; /* Augmenter la taille maximale pour le logo */
+  max-width: 100px; /* Réduire la taille maximale pour le logo */
   height: auto; /* Ajuster la hauteur automatiquement pour préserver les proportions */
 }
 
 /* Ajouter des styles pour le bouton */
 .btn-custom {
-  font-size: 1.2rem; /* Augmenter la taille de la police */
-  padding: 0.75rem 1.5rem; /* Augmenter le padding pour rendre le bouton plus grand */
+  font-size: 0.8rem; /* Réduire la taille de la police */
+  padding: 0.5rem 1rem; /* Réduire le padding pour rendre le bouton plus petit */
 }
 
 /* Ajouter des styles pour le header */

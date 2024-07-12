@@ -18,7 +18,7 @@
                 </div>
             </div>
         </div>
-            <div v-if="see_infoCompte" style="position: absolute; top: 230px; left: 1000px; widjth: 800px;box-shadow: 10px 20px 20px rgba(0, 0, 0, 0.5); height: 580px; background-color: rgb(146, 146, 146); overflow-y: auto">
+            <div v-if="see_infoCompte" style="position: absolute; top: 230px; left: 1000px; width: 800px;box-shadow: 10px 20px 20px rgba(0, 0, 0, 0.5); height: 580px; background-color: rgb(146, 146, 146); overflow-y: auto">
                 <h3 class="text-center " style="font-size: 20px; color: white; position: fixed; top: 200px; left: 1300px">Les infos de {{ choosedUser.designation }}</h3>
                 <button @click="see_infoCompte = false" class="btn btn-danger rounded-circle" style="position: fixed; top: 180px; right: 120px; ">
                     <span class="text-white" style="font-size: 20px; line-height: 1;">&times;</span>

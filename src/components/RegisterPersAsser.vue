@@ -2,20 +2,19 @@
   <div id="page" class="background-image">
     <form class="form" @submit.prevent="submitForm">
       <img src="../assets/addcmp.png" alt="Image de formulaire" class="form-image">
-      <p id="ajout_compte">Ajouter compte </p>
+      <p id="ajout_compte">Ajouter compte</p>
       <p id="Nature-compte">[Une Personne Assermentée]</p>
       <input id="Designation" type="text" v-model="formData.nom" placeholder="Nom de la personne assermentée:" @input="clearError" required>
       <input id="IFU" type="text" v-model="formData.ifu" placeholder="IFU:" @input="clearError" required>
       <input id="paswrd" type="text" v-model="formData.tel" placeholder="Téléphone:" @input="clearError" required>
       <input id="adresse" type="text" v-model="formData.prenoms" placeholder="Prenom de la personne assermentée:" @input="clearError" required>
       <input id="Contact" type="text" v-model="formData.nip" placeholder="Numéro d'identification personnel:" @input="clearError" required>
-      <br>
       <div id="dirigeant">
         <input id="dir_name" type="text" v-model="formData.profession" placeholder="Profession:" @input="clearError" required>
         <input id="dir_Contact" type="email" v-model="formData.email" placeholder="Adresse email:" @input="clearError" required>
       </div>
-      <button id="gen_btm" type="button" @click="generateUserCode(8)">Generer</button>
-      <input id="user_code_id" type="text" v-model="formData.password" placeholder="mot de passe:" @input="clearError" required>
+      <button id="gen_btm" type="button" @click="generateUserCode(8)">Générer</button>
+      <input id="user_code_id" type="text" v-model="formData.password" placeholder="Mot de passe:" @input="clearError" required>
       <h6 class="msgerr" v-if="ifuError">{{ ifuError }}</h6>
       <h6 class="msgerr" v-if="nipError">{{ nipError }}</h6>
       <h6 class="msgerr" v-if="badcode">8 caractères requis pour le code !</h6>
@@ -25,6 +24,8 @@
     </form>
   </div>
 </template>
+
+
 
 <script>
 import axios from 'axios';
@@ -142,185 +143,120 @@ export default {
 };
 </script>
 
- <style scoped>
-  #page.background-image {
-    position: absolute;
-    top: 0vh;
-    left: 0vw;
-    background-image: url('../assets/2.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat:no-repeat;
-    height: 100vh;
-    width: 100vw;
-  }
-  .form-image {
-    width: 70px;
-    height: 70px;
-  margin-right: 20px;
-  }
+<style scoped>
+#page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url('../assets/2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  #ajout_compte{
-    position: absolute;
-    top: 20px;
-    left: 130px;
-    font-size: xxx-large;
-    font-weight: 900;
-    color: rgb(90, 2, 90);
-  }
+.form {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ccc;
+  padding: 2em;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 90%;
+  width: 600px;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
 
-  #Nature-compte {
-    position: absolute;
-    top: 90px;
-    left: 230px;
-    font-size: 20px;
-    font-weight: 900;
-    color: rgb(90, 2, 90);
-  }
+.form-image {
+  width: 70px;
+  height: 70px;
+  display: block;
+  margin: 0 auto;
+}
 
-  #Designation {
-    position: absolute;
-    top: 170px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
+#ajout_compte,
+#Nature-compte {
+  text-align: center;
+  font-size: large;
+  font-weight: 900;
+  color: rgb(90, 2, 90);
+}
 
-  #IFU{
-    position: absolute;
-    top: 290px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
+input {
+  width: calc(100% - 20px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 
-  #adresse {
-    position: absolute;
-    top: 230px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  } 
+#gen_btm {
+  display: block;
+  width: 120px; /* Ajuste la largeur du bouton "Générer" */
+  background-color: rgb(73, 6, 73);
+  border-radius: 50px;
+  height: 35px; /* Ajuste la hauteur du bouton "Générer" */
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin: 10px auto;
+  font-size: 14px; /* Ajuste la taille de la police */
+}
 
-  #paswrd {
-    position: absolute;
-    top: 350px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
+#gen_btm:hover {
+  background-color: maroon;
+}
 
-  #Contact {
-    position: absolute;
-    top: 410px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
+#log {
+  display: block;
+  width: 100%;
+  background-color: rgb(73, 6, 73);
+  border-radius: 50px;
+  height: 45px;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
 
-  #dir_name {
-    position: absolute;
-    top: 170px;
-    left: 800px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
+#log:hover {
+  background-color: maroon;
+}
 
-  #dir_Contact{
-    position: absolute;
-    top: 230px;
-    left: 800px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
+.msgerr {
+  color: red;
+  font-size: 12px;
+  text-align: center;
+}
 
-  #gen_btm{
-    position: absolute;
-    top: 350px;
-    left: 800px;
-    width: 100px;
-    background-color: rgb(73, 6, 73);
-    border-radius: 50px;
-  }
+#ok-msg {
+  color: rgb(48, 177, 1);
+  text-align: center;
+}
 
-  #gen_btm:hover {
-    background-color: maroon;
-  }
-
-  #user_code_id {
-    position: absolute;
-    top: 395px;
-    left: 800px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
-
-  #ok-msg {
-    color:rgb(48, 177, 1);
-  }
-
+@media (max-width: 768px) {
   .form {
-      background-color: rgb(255, 255, 255);
-      border: 1px solid #ccc;
-      padding: 2em;
-      border-radius: 50px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      width: 1350px;
-      height: 620px;
-      position: absolute;
-      top:  50px;
-      left: 240px;
-      margin: 0;
-    }
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  #ajout_compte,
+  #Nature-compte {
+    font-size: medium;
+  }
 
   input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    font-size: 14px;
   }
 
+  #gen_btm,
   #log {
-    position: absolute;
-    top: 560px;
-    left: 510px;
-    width: 390px;
-    background-color: rgb(73, 6, 73);
-    border-radius: 50px;
-    height: 45px;
+    font-size: 14px;
   }
-
-  #log:hover {
-    background-color: maroon;
-  }
-
-  button {
-    background-color: #000000;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background-color: #821010;
-  }
-
-  .msgerr {
-    color: red;
-    font-size: 10px;
-  }
-  .msgsuccess {
-  color: green;
 }
-  </style>
+</style>
