@@ -1,30 +1,51 @@
 <template>
   <div id="page" class="background-image">
     <form class="form" @submit.prevent="submitForm">
-      <img src="../assets/addcmp.png" alt="Image de formulaire" class="form-image">
-      <p id="ajout_compte">Ajouter compte </p>
-      <p id="Nature-compte">[Une Banque]</p>
-      <input id="Designation" type="text" v-model="formData.nom" placeholder="Nom  du Front de la banque :" @input="clearError" required>
-      <input id="IFU" type="text" v-model="formData.ifu" placeholder="IFU:" @input="clearError" required>
-      <input id="paswrd" type="text" v-model="formData.tel" placeholder="Téléphone:" @input="clearError" required>
-      <input id="adresse" type="text" v-model="formData.prenoms" placeholder="libelé de la banque:" @input="clearError" required>
-      <input id="Contact" type="text" v-model="formData.nip" placeholder="Numéro d'identification personnel:" @input="clearError" required>
-      <br>
-      <div id="dirigeant">
-        <input id="dir_name" type="text" v-model="formData.profession" placeholder="Profession:" @input="clearError" required>
-        <input id="dir_Contact" type="email" v-model="formData.email" placeholder="Adresse email:" @input="clearError" required>
+      <div class="header">
+        <img src="../assets/addcmp.png" alt="Image de formulaire" class="form-image">
+        <div class="header-text">
+          <p id="ajout_compte">Ajouter compte</p>
+          <p id="Nature-compte">[Une Banque]</p>
+        </div>
       </div>
-      <button id="gen_btm" type="button" @click="generateUserCode(8)">Generer</button>
-      <input id="user_code_id" type="text" v-model="formData.password" placeholder="mot de passe:" @input="clearError" required>
-      <h6 class="msgerr" v-if="ifuError">{{ ifuError }}</h6>
-      <h6 class="msgerr" v-if="nipError">{{ nipError }}</h6>
-      <h6 class="msgerr" v-if="badcode">8 caractères requis pour le code !</h6>
-      <h6 class="msgerr" v-if="badinfo">{{ errorMessage }}</h6>
-      <h6 id="ok-msg" v-if="success">Inscription réussie !</h6>
-      <button id="log" type="submit">Inscrire</button>
+      <div class="form-content">
+        <!-- Champs alignés horizontalement -->
+        <div class="form-group-inline">
+          <input id="Designation" type="text" v-model="formData.nom" placeholder="Nom du Front de la banque :" @input="clearError" required>
+          <input id="adresse" type="text" v-model="formData.prenoms" placeholder="Libelé de la banque:" @input="clearError" required>
+          <input id="paswrd" type="text" v-model="formData.tel" placeholder="Téléphone:" @input="clearError" required>
+        </div>
+        
+        <!-- Champs alignés horizontalement sur une autre ligne -->
+        <div class="form-group-inline">
+          <input id="IFU" type="text" v-model="formData.ifu" placeholder="IFU:" @input="clearError" required>
+          <input id="Contact" type="text" v-model="formData.nip" placeholder="Numéro d'identification personnel:" @input="clearError" required>
+        </div>
+        
+        <!-- Champs alignés horizontalement sur une autre ligne -->
+        <div class="form-group-inline">
+          <input id="dir_name" type="text" v-model="formData.profession" placeholder="Profession:" @input="clearError" required>
+          <input id="dir_Contact" type="email" v-model="formData.email" placeholder="Adresse email:" @input="clearError" required>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button id="gen_btm" type="button" @click="generateUserCode(8)">Générer</button>
+        <input id="user_code_id" type="text" v-model="formData.password" placeholder="Mot de passe:" @input="clearError" required>
+        <button id="log" type="submit">Inscrire</button>
+      </div>
+      <div class="form-messages">
+        <h6 class="msgerr" v-if="ifuError">{{ ifuError }}</h6>
+        <h6 class="msgerr" v-if="nipError">{{ nipError }}</h6>
+        <h6 class="msgerr" v-if="badcode">8 caractères requis pour le code !</h6>
+        <h6 class="msgerr" v-if="badinfo">{{ errorMessage }}</h6>
+        <h6 id="ok-msg" v-if="success">Inscription réussie !</h6>
+      </div>
     </form>
   </div>
 </template>
+
+
+
 
 <script>
 import axios from 'axios';
@@ -147,184 +168,147 @@ export default {
 
 
   <style scoped>
-  #page.background-image {
-    position: absolute;
-    top: 0vh;
-    left: 0vw;
-    background-image: url('../assets/2.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat:no-repeat;
-    height: 100vh;
-    width: 100vw;
-  }
-  .form-image {
-    width: 70px;
-    height: 70px;
-  margin-right: 20px;
-  }
-
-  #ajout_compte{
-    position: absolute;
-    top: 20px;
-    left: 130px;
-    font-size: xxx-large;
-    font-weight: 900;
-    color: rgb(90, 2, 90);
-  }
-
-  #Nature-compte {
-    position: absolute;
-    top: 90px;
-    left: 230px;
-    font-size: 20px;
-    font-weight: 900;
-    color: rgb(90, 2, 90);
-  }
-
-  #Designation {
-    position: absolute;
-    top: 170px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
-
-  #IFU{
-    position: absolute;
-    top: 290px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
-
-  #adresse {
-    position: absolute;
-    top: 230px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  } 
-
-  #paswrd {
-    position: absolute;
-    top: 350px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
-
-  #Contact {
-    position: absolute;
-    top: 410px;
-    left: 70px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
-
-  #dir_name {
-    position: absolute;
-    top: 170px;
-    left: 800px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
-
-  #dir_Contact{
-    position: absolute;
-    top: 230px;
-    left: 800px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
-
-  #gen_btm{
-    position: absolute;
-    top: 350px;
-    left: 800px;
-    width: 100px;
-    background-color: rgb(73, 6, 73);
-    border-radius: 50px;
-  }
-
-  #gen_btm:hover {
-    background-color: maroon;
-  }
-
-  #user_code_id {
-    position: absolute;
-    top: 395px;
-    left: 800px;
-    width: 500px;
-    border-radius: 50px;
-    height: 45px;
-  }
-
-  #ok-msg {
-    color:rgb(48, 177, 1);
-  }
-
-  .form {
-      background-color: rgb(255, 255, 255);
-      border: 1px solid #ccc;
-      padding: 2em;
-      border-radius: 50px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      width: 1350px;
-      height: 620px;
-      position: absolute;
-      top:  50px;
-      left: 240px;
-      margin: 0;
-    }
-
-  input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-
-  #log {
-    position: absolute;
-    top: 560px;
-    left: 510px;
-    width: 390px;
-    background-color: rgb(73, 6, 73);
-    border-radius: 50px;
-    height: 45px;
-  }
-
-  #log:hover {
-    background-color: maroon;
-  }
-
-  button {
-    background-color: #000000;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background-color: #821010;
-  }
-
-  .msgerr {
-    color: red;
-    font-size: 10px;
-  }
-  .msgsuccess {
-  color: green;
+#page.background-image {
+  position: relative;
+  background-image: url('../assets/2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.form {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  padding: 2em;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 1000px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+.form-image {
+  width: 70px;
+  height: 70px;
+  margin-right: 20px;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+#ajout_compte {
+  font-size: 2rem;
+  font-weight: bold;
+  color: rgb(90, 2, 90);
+}
+
+#Nature-compte {
+  font-size: 1.2rem;
+  color: rgb(90, 2, 90);
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+.form-group-inline {
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+input {
+  padding: 0.75em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 0.5em;
+  flex: 1;
+}
+
+#Designation,
+#adresse,
+#paswrd,
+#IFU,
+#Contact,
+#dir_name,
+#dir_Contact,
+#user_code_id {
+  flex: 1;
+}
+
+#Designation,
+#adresse,
+#paswrd {
+  max-width: calc(33.33% - 1em); /* Réduit la largeur pour tenir sur la même ligne */
+}
+
+#IFU,
+#Contact {
+  max-width: calc(50% - 0.5em); /* Réduit la largeur pour tenir sur la même ligne */
+}
+
+#dir_name,
+#dir_Contact {
+  max-width: calc(50% - 0.5em); /* Réduit la largeur pour tenir sur la même ligne */
+}
+
+.form-actions {
+  display: flex;
+  gap: 1em;
+  margin-top: 1em;
+  justify-content: space-between;
+}
+
+button {
+  background-color: rgb(73, 6, 73);
+  color: #fff;
+  padding: 0.75em 1.5em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: maroon;
+}
+
+#gen_btm {
+  background-color: rgb(73, 6, 73);
+}
+
+#log {
+  background-color: rgb(73, 6, 73);
+}
+
+#ok-msg {
+  color: rgb(48, 177, 1);
+}
+
+.msgerr {
+  color: red;
+  font-size: 0.875rem;
+}
+
+.form-messages {
+  margin-top: 1em;
+}
+
+
   </style>

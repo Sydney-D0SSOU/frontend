@@ -6,24 +6,24 @@
         </div>
         <div id="options" class="opts">
             <div @click="chooseOption(options, 'acceuil')" id="acceuil" class="opt" :class="{'optionSelect': options[0]?.value}">
-                <div>Acceuil</div>
                 <img src="../../assets/home.png" alt="logo d'une maison">
+                <div>Acceuil</div>
             </div>
             <div @click="chooseOption(options, 'licence')" id="licence" class="opt" :class="{'optionSelect': options[1]?.value}">
-                <div>Licences vendues</div>
                 <img src="../../assets/licence.png" alt="logo d'une maison">
+                <div>Licences vendues</div>
             </div>
             <div @click="chooseOption(options, 'stats')" id="statistiques" class="opt" :class="{'optionSelect': options[2]?.value}">
-                <div>Statistiques</div>
                 <img src="../../assets/stats.png" alt="logo de statistiques">
+                <div>Statistiques</div>
             </div>
             <div @click="chooseOption(options, 'transaction')" id="transactions" class="opt" :class="{'optionSelect': options[3]?.value}">
-                <div>Transactions</div>
                 <img src="../../assets/transaction.png" alt="logo de transaction">
+                <div>Transactions</div>
             </div>
             <div @click="chooseOption(options, 'compte'); chooseOption(allComptes, 'FO')" id="compte" class="opt" :class="{'optionSelect': options[4]?.value}">
-                <div>Comptes</div>
                 <img src="../../assets/compte.png" alt="logo de compte">
+                <div>Comptes</div>
             </div>
             <div v-if="options[4]?.value" id="all-comptes" class="opts">
                 <div @click="chooseOption(allComptes, 'FO')" :class="{'CompteSelect': allComptes[0]?.value}">Front Office</div>
@@ -33,12 +33,13 @@
             </div>
             <div id="line"></div>
             <div @click="Deconnect()" id="Deconnexion" class="opt" :class="{'optionSelect': options[6]?.value}">
+                <img src="../../assets/deconnexion.png" alt="logo de déconnexion">
                 <div>Déconnexion</div>
-                <img src="../../assets/deconnexion.png" alt="logo de parametre">
             </div>
         </div>
     </div>
 </template>
+
 
 <script>
 export default {
@@ -148,13 +149,19 @@ export default {
     background-color: transparent;
     display: flex;
     align-items: center;
-    justify-content: center;
     margin: 10px 0;
     cursor: pointer;
+    justify-content: flex-start; /* Ajuste pour aligner les éléments à gauche */
+}
+
+.opt > img {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px; /* Espacement entre l'image et le texte */
 }
 
 .opt > div {
-    margin-left: 10px;
+    margin: 0;
 }
 
 .opt:hover {
@@ -163,11 +170,6 @@ export default {
     border-radius: 20px;
     color: black;
     background-color: rgb(214, 175, 103);
-}
-
-.opt > img {
-    height: 30px;
-    width: 30px;
 }
 
 .opts {
@@ -247,4 +249,5 @@ export default {
         margin: 5px;
     }
 }
+
 </style>

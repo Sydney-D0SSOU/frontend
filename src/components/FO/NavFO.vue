@@ -10,7 +10,7 @@
                 <img src="../../assets/home.png" alt="logo d'une maison">
             </div>
             <div @click="chooseOption(options, 'licence')" id="licence" class="opt" :class="{'optionSelect': options[1].value}">
-                <div>Licences vendues</div>
+                <div>Licences </div>
                 <img src="../../assets/licence.png" alt="logo d'une maison">
             </div>
             <div @click="chooseOption(options, 'stats')" id="statistiques" class="opt" :class="{'optionSelect': options[2].value}">
@@ -34,14 +34,7 @@
                 <div>Paramètres</div>
                 <img src="../../assets/parametre.png" alt="logo de parametre">
             </div>
-            <!-- <div @click="chooseOption(options, 'add compte')" id="ajouterCompte"  class="opt" :class="{'optionSelect': options[6].value}">
-                <div>Ajouter compte</div>
-                <img src="../assets/ajout-compte.png" alt="logo d'ajout de compte">
-            </div>
-            <div @click="chooseOption(options, 'delete compte')" id="supprimerCompte"  class="opt" :class="{'optionSelect': options[7].value}">
-                <div>Supprimer compte</div>
-                <img src="../assets/supprimer-compte.png" alt="logo de suppression">
-            </div> -->
+           
             <div @click="Deconnect()" id="Deconnexion"  class="opt" :class="{'optionSelect': options[6].value}">
                 <div>Déconnexion</div>
                 <img src="../../assets/deconnexion.png" alt="logo de parametre">
@@ -57,10 +50,10 @@ export default {
             options: [
                 { name: 'acceuil', path: '/frontOffices', value: true },
                 { name: 'licence', path: '/frontOffices/licences-vendues', value: false },
-                { name: 'stats', path: '/admin', value: false },
-                { name: 'transaction', path: '/admin', value: false },
+                { name: 'stats', path: '/stats', value: false },
+                { name: 'transaction', path: '/', value: false },
                 { name: 'compte', path: '/frontOffices/infos-FO', value: false },
-                { name: 'params', path: '/admin', value: false },
+                { name: 'params', path: '/', value: false },
                 { name: 'log out', path: '/', value: false },
             ],
             allComptes: [
@@ -120,44 +113,43 @@ export default {
 }
 </script>
 
-<style scoped>
 
+<style scoped>
 #nav {
     position: fixed;
     top: 0px;
     left: 0px;
-    height: 950px;
-    width: 280px;
+    height: 100vh; /* Full viewport height */
+    width: 220px; /* Reduced width */
     background-color: rgb(0, 0, 0);
+    overflow: auto; /* Allow scrolling if needed */
 }
 
 #logo {
     position: absolute;
-    top: 0px;
-    left: 90px;
-    height: 100px;
-    width: 80px;
+    top: 10px;
+    left: 10px;
+    height: 80px;
+    width: 60px;
 }
 
 #chiffre-affaire {
     position: relative;
     color: white;
     background-color: rgb(43, 141, 38);
-    top: 130px;
-    left: 25px;
+    top: 100px;
+    left: 10px;
     width: 200px;
     padding: 10px;
     border-radius: 20px;
 }
 
 .opt {
-    position: absolute;
+    position: relative;
     color: white;
-    /* top: 250px;
-    left: 30px; */
-    left: 30px;
     height: 40px;
-    width: 220px;
+    width: calc(100% - 20px); /* Adjust width to fit inside the nav */
+    margin: 5px 0; /* Add margin for spacing */
     border-radius: 20px;
     font-weight: 900;
     background-color: rgba(0, 128, 0, 0);
@@ -172,10 +164,8 @@ export default {
 }
 
 .opt:hover {
-    /* left: 0px; */
-    transform: translateX(-20px);
+    transform: translateX(-10px);
     transition: all 0.3s;
-    /* cursor: pointer; */
     border-radius: 20px;
     color: rgb(3, 3, 3);
     background-color: rgb(214, 175, 103);
@@ -190,7 +180,6 @@ export default {
 }
 
 .opts {
-    position: absolute;
     display: flex;
     flex-direction: column;
 }
@@ -200,17 +189,10 @@ export default {
 }
 
 #options {
-    top: 240px;
-}
-
-.opts > div {
-    position: relative;
-    margin-bottom: 15px;
+    margin-top: 100px; /* Adjust top margin to fit below the chiffre-affaire */
 }
 
 #all-comptes {
-    top: 0px;
-    left: 80px;
     color: white;
 }
 
@@ -221,11 +203,6 @@ export default {
 #all-comptes > div:hover {
     color: orange;
 }
-/* 
-#line {
-   
-  height: 1px; width: 240px; background-color: white; position: relative; left: 13px;
-} */
 
 .CompteSelect {
     color: orange;
@@ -240,16 +217,61 @@ export default {
 #Deconnexion:hover {
     background-color: rgb(168, 2, 2);
     color: white;
-     box-shadow: 0 0 20px red;
+    box-shadow: 0 0 20px red;
 }
 
 .glissante {
-    transition: transform 0.5s ease-in-out; /* Animation de 0,5 seconde avec accélération et décélération */
-  transform: translateX(-100%);
+    transition: transform 0.5s ease-in-out; /* Animation */
+    transform: translateX(-100%);
 }
 
 .glissante.show {
     transform: translateX(0);
 }
 
+/* Media Queries */
+@media (max-width: 768px) {
+    #nav {
+        width: 180px; /* Further reduced width for smaller screens */
+    }
+
+    #logo {
+        height: 60px;
+        width: 50px;
+    }
+
+    #chiffre-affaire {
+        top: 80px;
+        left: 5px;
+        width: 170px;
+    }
+
+    .opt {
+        width: calc(100% - 10px);
+    }
+}
+
+@media (max-width: 480px) {
+    #nav {
+        width: 150px; /* Further reduced width for very small screens */
+    }
+
+    #logo {
+        height: 50px;
+        width: 40px;
+    }
+
+    #chiffre-affaire {
+        top: 60px;
+        left: 0;
+        width: 130px;
+        font-size: 14px; /* Adjust font size for small screens */
+    }
+
+    .opt {
+        font-size: 14px; /* Adjust font size for small screens */
+    }
+}
 </style>
+
+
