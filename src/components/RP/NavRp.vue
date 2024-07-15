@@ -21,7 +21,7 @@
                 <div>Transactions</div>
                 <img src="../../assets/transaction.png" alt="logo de transaction">
             </div>
-            <div @click="chooseOption(options, 'compte'); chooseOption(allComptes, 'FO')" id="compte"  class="opt" :class="{'optionSelect': options[4]?.value}">
+            <div @click="chooseOption(options, 'compte'); chooseOption(allComptes, 'FO')" id="compte" class="opt" :class="{'optionSelect': options[4]?.value}">
                 <div>Comptes</div>
                 <img src="../../assets/compte.png" alt="logo de compte">
             </div>
@@ -31,8 +31,8 @@
                 <div @click="chooseOption(allComptes, 'Banque')" :class="{'CompteSelect': allComptes[2]?.value}">Banque</div>
                 <div @click="chooseOption(allComptes, 'User')" :class="{'CompteSelect': allComptes[3]?.value}">Civils</div>
             </div>
-            <div id="line" style="height: 1px; width: 240px; background-color: white; position: relative; left: 13px;"></div>
-            <div @click="Deconnect()" id="Deconnexion"  class="opt" :class="{'optionSelect': options[6]?.value}">
+            <div id="line"></div>
+            <div @click="Deconnect()" id="Deconnexion" class="opt" :class="{'optionSelect': options[6]?.value}">
                 <div>Déconnexion</div>
                 <img src="../../assets/deconnexion.png" alt="logo de parametre">
             </div>
@@ -47,8 +47,8 @@ export default {
             options: [
                 { name: 'acceuil', path: '/representant-pays', value: true },
                 { name: 'licence', path: '/representant-pays/licences-vendues', value: false },
-                { name: 'stats', path: '/', value: false },
-                { name: 'transaction', path: '/', value: false },
+                { name: 'stats', path: '/stats', value: false },
+                { name: 'transaction', path: '/stats', value: false },
                 { name: 'compte', path: '/representant-pays/infos-FO', value: false },
                 { name: 'params', path: '/admin', value: false },
                 { name: 'log out', path: '/', value: false },
@@ -110,97 +110,86 @@ export default {
 </script>
 
 <style scoped>
-
 #nav {
     position: fixed;
-    top: 0px;
-    left: 0px;
-    height: 950px;
-    width: 280px;
-    background-color: rgb(0, 0, 0);
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 240px;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
 }
 
 #logo {
-    position: absolute;
-    top: 0px;
-    left: 90px;
-    height: 100px;
-    width: 80px;
+    height: 80px;
+    width: 60px;
+    margin: 20px 0;
 }
 
 #chiffre-affaire {
-    position: relative;
     color: white;
     background-color: rgb(43, 141, 38);
-    top: 130px;
-    left: 25px;
-    width: 200px;
+    width: 180px;
     padding: 10px;
     border-radius: 20px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .opt {
-    position: absolute;
     color: white;
-    left: 30px;
     height: 40px;
-    width: 220px;
+    width: 200px;
     border-radius: 20px;
     font-weight: 900;
-    background-color: rgba(0, 128, 0, 0);
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+    cursor: pointer;
 }
 
 .opt > div {
-    position: absolute;
-    top: 0px;
-    left: 60px;
-    font-weight: 900;
-    padding-top: 8px;
+    margin-left: 10px;
 }
 
 .opt:hover {
-    transform: translateX(-20px);
+    transform: translateX(-10px);
     transition: all 0.3s;
     border-radius: 20px;
-    color: rgb(3, 3, 3);
+    color: black;
     background-color: rgb(214, 175, 103);
 }
 
 .opt > img {
-    position: relative;
-    top: 4px;
-    left: 10px;
     height: 30px;
     width: 30px;
 }
 
 .opts {
-    position: absolute;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .opts > div:hover {
     cursor: pointer;
 }
 
-#options {
-    top: 240px;
-}
-
-.opts > div {
-    position: relative;
-    margin-bottom: 15px;
-}
-
 #all-comptes {
-    top: 0px;
-    left: 80px;
     color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
 }
 
 #all-comptes > div {
-    margin-bottom: 10px;
+    margin: 5px 0;
 }
 
 #all-comptes > div:hover {
@@ -220,16 +209,42 @@ export default {
 #Deconnexion:hover {
     background-color: rgb(168, 2, 2);
     color: white;
-     box-shadow: 0 0 20px red;
+    box-shadow: 0 0 20px red;
 }
 
-.glissante {
-    transition: transform 0.5s ease-in-out;
-    transform: translateX(-100%);
-}
+@media (max-width: 768px) {
+    #nav {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 10px;
+    }
 
-.glissante.show {
-    transform: translateX(0);
-}
+    #logo {
+        margin: 0 10px;
+        height: 40px;
+        width: 30px;
+    }
 
+    #chiffre-affaire {
+        width: auto;
+        margin: 10px;
+    }
+
+    .opt {
+        width: auto;
+        flex: 1 1 100%;
+        margin: 5px;
+    }
+
+    #all-comptes {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    #all-comptes > div {
+        margin: 5px;
+    }
+}
 </style>

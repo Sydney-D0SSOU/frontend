@@ -4,7 +4,6 @@ import home from '@views/home.vue';
 import Connexion from '@views/auth/Login.vue';
 import A401_user from '@components/AccessDeniedUser.vue';
 
-import Admin from '@views/admin/SuperAdmin.vue';
 import InscriptionFront from '@components/RegisterFront.vue';
 import InscriptionPersAsser from '@components/RegisterPersAsser.vue';
 import InscriptionUser from '@components/RegisterUser.vue';
